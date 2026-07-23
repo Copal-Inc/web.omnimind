@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Aviso de Privacidad"
+  description="Aviso de privacidad de Omnimind. Conoce cómo recopilamos, usamos y protegemos tus datos personales conforme a la Ley Federal de Protección de Datos Personales en México."
+>
+
+  <section class="section" aria-labelledby="privacidad-heading">
+    <div class="container-sm prose">
+      <h1 id="privacidad-heading">Aviso de Privacidad</h1>
+
+      <p class="aviso-fecha">
+        <strong>Última actualización:</strong> Julio 2026
+      </p>
+
+      <!-- ──────────────────────────────────────
+           PLACEHOLDER — Pendiente revisión legal
+           ────────────────────────────────────── -->
+      <div class="aviso-placeholder-notice" role="note" aria-label="Nota: contenido pendiente de revisión legal">
+        ⚠️ <strong>Contenido pendiente:</strong> Este aviso de privacidad es un
+        template placeholder. Debe ser revisado y aprobado por el área legal o
+        representante de Omnimind antes de publicarse.
+      </div>
+
+      <h2>Responsable del tratamiento de datos</h2>
+      <p>
+        <strong>Omnimind</strong> (en adelante "la Empresa"), con domicilio en
+        Ciudad de México, México, es responsable del tratamiento de los datos
+        personales que usted nos proporcione.
+      </p>
+      <!-- Placeholder — pendiente razón social y domicilio fiscal oficiales -->
+
+      <h2>Datos personales que recabamos</h2>
+      <p>
+        A través de nuestro sitio web y formulario de contacto podemos recabar
+        los siguientes datos personales:
+      </p>
+      <ul>
+        <li>Nombre completo</li>
+        <li>Correo electrónico</li>
+        <li>Número de teléfono</li>
+        <li>Nombre de la empresa u organización</li>
+        <li>Información relacionada con los servicios de su interés</li>
+      </ul>
+
+      <h2>Finalidades del tratamiento</h2>
+      <p>Sus datos personales serán utilizados para las siguientes finalidades:</p>
+      <ul>
+        <li>Atender su solicitud de cotización o información</li>
+        <li>Dar seguimiento comercial a propuestas y servicios</li>
+        <li>Enviar comunicaciones relacionadas con nuestros programas (con su consentimiento)</li>
+        <li>Cumplir con obligaciones legales y contractuales</li>
+      </ul>
+
+      <h2>Transferencia de datos</h2>
+      <p>
+        Sus datos personales no serán transferidos a terceros sin su consentimiento,
+        salvo en los casos previstos en el artículo 37 de la Ley Federal de
+        Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
+      </p>
+
+      <h2>Derechos ARCO</h2>
+      <p>
+        Usted tiene derecho a <strong>Acceder, Rectificar, Cancelar u Oponerse</strong>
+        (derechos ARCO) al tratamiento de sus datos personales. Para ejercerlos,
+        envíe un correo a:
+        <a href="mailto:privacidad@omnimind.mx">privacidad@omnimind.mx</a>
+        <!-- Placeholder — pendiente correo oficial -->
+      </p>
+
+      <h2>Cambios al aviso de privacidad</h2>
+      <p>
+        Nos reservamos el derecho de actualizar este aviso de privacidad en
+        cualquier momento. Cualquier cambio será publicado en esta misma página
+        con la fecha de actualización correspondiente.
+      </p>
+
+      <h2>Contacto</h2>
+      <p>
+        Para cualquier duda relacionada con el tratamiento de sus datos, puede
+        contactarnos a través de nuestra
+        <a href="/contacto/">página de contacto</a>
+        o enviando un correo a
+        <a href="mailto:contacto@omnimind.mx">contacto@omnimind.mx</a>.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .aviso-fecha {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin-bottom: 2rem;
+  }
+
+  .aviso-placeholder-notice {
+    background: #fff8e1;
+    border: 1.5px solid #f9a825;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    font-size: var(--text-sm);
+    color: #5d4037;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+</style>

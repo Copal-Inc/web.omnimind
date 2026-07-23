@@ -1,0 +1,159 @@
+# ============================================================
+# Decap CMS — Configuración para Omnimind
+# ============================================================
+#
+# ESTADO ACTUAL: test-repo (funciona en local sin autenticación)
+# PENDIENTE: cuando se defina el hosting, reemplazar el bloque
+# "backend" de arriba por la opción correspondiente.
+# ============================================================
+
+# ── OPCIÓN A — GitHub + Netlify (descomentar en Iteración 8) ──
+# backend:
+#   name: github
+#   repo: empresa-omnimind/web-omnimind   # ← cambiar por el repo real
+#   branch: main
+#   base_url: https://api.netlify.com     # ← proxy OAuth de Netlify
+#   auth_endpoint: auth
+
+# ── OPCIÓN B — Git Gateway con Netlify Identity (alternativa) ──
+# backend:
+#   name: git-gateway
+#   branch: main
+
+# ── BACKEND ACTUAL: test-repo (solo para desarrollo local) ──
+# Los datos NO persisten entre sesiones. Solo sirve para
+# probar la interfaz del CMS sin subir nada a ningún repo.
+backend:
+  name: test-repo
+
+# ── MEDIA ──
+# Las imágenes subidas desde el CMS se guardan en public/uploads/
+# y son accesibles en producción como /uploads/nombre-de-archivo.jpg
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# ── SITE URL ──
+# (descomentar y actualizar cuando el sitio esté desplegado)
+# site_url: https://omnimindcourses.com
+
+# ── CONFIGURACIÓN DEL EDITOR ──
+editor:
+  preview: false   # Preview live requiere configuración extra — Iteración 8
+
+# ============================================================
+# COLECCIONES
+# Los campos deben coincidir EXACTAMENTE con el schema de
+# src/content.config.ts para que Astro los valide correctamente.
+# ============================================================
+collections:
+
+  # ── BLOG ──
+  - name: "blog"
+    label: "Blog"
+    label_singular: "Artículo"
+    folder: "src/content/blog"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{publishDate}}"
+    sortable_fields: ["publishDate", "title", "category"]
+    view_groups:
+      - label: "Por categoría"
+        field: category
+      - label: "Borradores"
+        field: draft
+
+    fields:
+
+      # ── Obligatorios ──
+      - label: "Título"
+        name: "title"
+        widget: "string"
+        hint: "Título del artículo tal como aparecerá en el sitio."
+
+      - label: "Descripción"
+        name: "description"
+        widget: "string"
+        hint: "Resumen corto (1-2 oraciones). Aparece en la vista de lista del blog y en SEO."
+
+      - label: "Fecha de publicación"
+        name: "publishDate"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+        hint: "Fecha en que el artículo será visible en el sitio."
+
+      # ── Opcionales de autoría ──
+      - label: "Autora"
+        name: "author"
+        widget: "string"
+        required: false
+        hint: "Nombre de la persona que escribió el artículo."
+
+      - label: "Categoría"
+        name: "category"
+        widget: "select"
+        required: false
+        options:
+          - { label: "Productividad",           value: "Productividad" }
+          - { label: "Bienestar",               value: "Bienestar" }
+          - { label: "Neurociencias",            value: "Neurociencias" }
+          - { label: "Liderazgo",               value: "Liderazgo" }
+          - { label: "Salud mental",            value: "Salud mental" }
+          - { label: "Recursos humanos",        value: "Recursos humanos" }
+          - { label: "Empowermind",             value: "Empowermind" }
+          - { label: "Neurowise",               value: "Neurowise" }
+          - { label: "Wealth & Mind",           value: "Wealth & Mind" }
+        hint: "Categoría principal del artículo."
+
+      - label: "Etiquetas"
+        name: "tags"
+        widget: "list"
+        required: false
+        default: []
+        hint: "Palabras clave separadas por coma. Ejemplo: productividad, equipos, bienestar."
+
+      # ── Imagen de portada ──
+      - label: "Imagen de portada"
+        name: "cover"
+        widget: "image"
+        required: false
+        hint: "Imagen destacada del artículo. Se mostrará en la lista del blog y al inicio del post. Tamaño recomendado: 1200×630 px."
+
+      - label: "Texto alternativo de la portada"
+        name: "coverAlt"
+        widget: "string"
+        required: false
+        hint: "Descripción de la imagen para accesibilidad y SEO."
+
+      # ── Visibilidad ──
+      - label: "Borrador"
+        name: "draft"
+        widget: "boolean"
+        default: false
+        hint: "Si está activado, el artículo NO aparecerá en el sitio aunque esté guardado."
+
+      - label: "Destacado"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        hint: "Marca este artículo para darle visibilidad especial en la portada."
+
+      # ── Fechas adicionales ──
+      - label: "Fecha de última actualización"
+        name: "updatedDate"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+        required: false
+        hint: "Si actualizas el contenido después de publicarlo, registra aquí la fecha."
+
+      # ── Contenido ──
+      - label: "Contenido del artículo"
+        name: "body"
+        widget: "markdown"
+        hint: "El cuerpo completo del artículo. Puedes usar formato Markdown: **negrita**, *cursiva*, ## encabezados, etc."

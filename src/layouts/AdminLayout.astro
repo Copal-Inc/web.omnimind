@@ -1,0 +1,45 @@
+---
+// Layout para páginas de administración — sin Header ni Footer del sitio público.
+// Usa su propia estructura mínima con BaseHead para SEO y fuentes.
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Admin',
+  description = 'Panel de administración de Omnimind.',
+} = Astro.props;
+
+const pageTitle = `${title} | ${SITE_TITLE} Admin`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <BaseHead title={pageTitle} description={description} />
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body class="admin-body">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Reseteo mínimo para el panel de admin — sin los estilos del sitio público */
+  .admin-body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-surface-muted);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+</style>

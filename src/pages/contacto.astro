@@ -1,0 +1,367 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contacto"
+  description="Contáctanos para solicitar una cotización o más información sobre los programas de Omnimind. Diseñamos intervenciones a la medida de tu organización."
+>
+
+  <!-- HERO -->
+  <section class="page-hero section-dark" aria-label="Contacto">
+    <div class="container page-hero__inner">
+      <span class="section-heading__eyebrow">Hablemos</span>
+      <h1 class="page-hero__title">¿Cómo podemos ayudarte?</h1>
+      <p class="page-hero__lead">
+        Cuéntanos el reto que enfrenta tu organización y diseñamos una
+        propuesta a la medida.
+      </p>
+    </div>
+  </section>
+
+  <!-- FORMULARIO + INFO -->
+  <section class="section" aria-labelledby="contacto-form-heading">
+    <div class="container contacto-grid">
+
+      <!-- FORMULARIO -->
+      <div class="contacto-form-wrap">
+        <h2 id="contacto-form-heading" class="contacto-form-wrap__title">
+          Solicita tu cotización
+        </h2>
+        <p class="contacto-form-wrap__sub">
+          Te respondemos en máximo 48 horas hábiles.
+        </p>
+
+        <!--
+          BACKEND PENDIENTE — elegir al definir hosting:
+            Opción A — Netlify Forms:
+              <form method="POST" data-netlify="true" name="contacto" netlify>
+                <input type="hidden" name="form-name" value="contacto" />
+
+            Opción B — Formspree:
+              <form action="https://formspree.io/f/XXXXXXXX" method="POST">
+
+            Opción C — Endpoint propio (Iteración 8):
+              <form action="/api/contacto" method="POST">
+        -->
+        <form
+          id="contacto-form"
+          class="contacto-form"
+          method="POST"
+          action="#"
+          novalidate
+          aria-label="Formulario de contacto y cotización"
+        >
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="nombre">Nombre completo <span aria-hidden="true">*</span></label>
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                class="form-input"
+                placeholder="Ana García"
+                required
+                autocomplete="name"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="empresa">Empresa u organización <span aria-hidden="true">*</span></label>
+              <input
+                id="empresa"
+                name="empresa"
+                type="text"
+                class="form-input"
+                placeholder="Mi Empresa S.A. de C.V."
+                required
+                autocomplete="organization"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="email">Correo electrónico <span aria-hidden="true">*</span></label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                class="form-input"
+                placeholder="ana@empresa.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="telefono">Teléfono (opcional)</label>
+              <input
+                id="telefono"
+                name="telefono"
+                type="tel"
+                class="form-input"
+                placeholder="+52 55 1234 5678"
+                autocomplete="tel"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="servicio">¿Qué solución te interesa?</label>
+            <select id="servicio" name="servicio" class="form-input form-select">
+              <option value="">Selecciona una opción</option>
+              <option value="empowermind">Empowermind</option>
+              <option value="neurowise">Neurowise</option>
+              <option value="wealth-mind">Wealth &amp; Mind</option>
+              <option value="combinado">Combinación de servicios</option>
+              <option value="no-se">Aún no lo sé — necesito asesoría</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="mensaje">Cuéntanos tu reto <span aria-hidden="true">*</span></label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              class="form-input form-textarea"
+              rows="5"
+              placeholder="Describe brevemente el reto o necesidad de tu organización…"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group form-group--check">
+            <label class="form-check-label" for="privacidad">
+              <input
+                id="privacidad"
+                name="privacidad"
+                type="checkbox"
+                class="form-check"
+                required
+              />
+              <span>
+                He leído y acepto el
+                <a href="/aviso-de-privacidad/" target="_blank" rel="noopener">aviso de privacidad</a>.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary contacto-form__submit" id="contacto-submit">
+            Enviar solicitud
+          </button>
+
+          <p class="form-note">
+            * Campos requeridos. Tu información es confidencial y no se comparte con terceros.
+          </p>
+        </form>
+      </div>
+
+      <!-- INFO DE CONTACTO -->
+      <aside class="contacto-info" aria-label="Información de contacto">
+        <h2 class="contacto-info__title">También puedes encontrarnos en:</h2>
+
+        <ul class="contacto-info__list" role="list">
+          <li class="contacto-info__item">
+            <span class="contacto-info__icon" aria-hidden="true">📧</span>
+            <div>
+              <strong>Correo</strong>
+              <a href="mailto:contacto@omnimind.mx">contacto@omnimind.mx</a>
+              <!-- Placeholder — pendiente correo oficial -->
+            </div>
+          </li>
+          <li class="contacto-info__item">
+            <span class="contacto-info__icon" aria-hidden="true">📱</span>
+            <div>
+              <strong>WhatsApp / Teléfono</strong>
+              <a href="tel:+521234567890">+52 12 3456 7890</a>
+              <!-- Placeholder — pendiente número oficial -->
+            </div>
+          </li>
+          <li class="contacto-info__item">
+            <span class="contacto-info__icon" aria-hidden="true">📍</span>
+            <div>
+              <strong>Ubicación</strong>
+              <span>Ciudad de México, México</span>
+              <!-- Placeholder — pendiente dirección oficial -->
+            </div>
+          </li>
+          <li class="contacto-info__item">
+            <span class="contacto-info__icon" aria-hidden="true">💼</span>
+            <div>
+              <strong>LinkedIn</strong>
+              <a href="https://linkedin.com/company/omnimind" target="_blank" rel="noopener">
+                linkedin.com/company/omnimind
+              </a>
+              <!-- Placeholder — pendiente perfil oficial -->
+            </div>
+          </li>
+          <li class="contacto-info__item">
+            <span class="contacto-info__icon" aria-hidden="true">📸</span>
+            <div>
+              <strong>Instagram</strong>
+              <a href="https://instagram.com/omnimind" target="_blank" rel="noopener">
+                @omnimind
+              </a>
+              <!-- Placeholder — pendiente handle oficial -->
+            </div>
+          </li>
+        </ul>
+
+        <div class="contacto-info__horario">
+          <h3>Horario de atención</h3>
+          <p>Lunes a viernes, 9:00 – 18:00 hrs (hora CDMX)</p>
+          <!-- Placeholder — pendiente horario oficial -->
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: 4rem 3.5rem; }
+  .page-hero__inner { text-align: center; max-width: 680px; margin-inline: auto; }
+  .page-hero__title {
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+    color: var(--color-text-on-dark);
+    margin-block: 0.75rem 1.25rem;
+  }
+  .page-hero__lead { font-size: var(--text-lg); color: var(--color-text-on-dark-soft); line-height: 1.7; margin: 0; }
+
+  /* ── GRID CONTACTO ── */
+  .contacto-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  /* ── FORM ── */
+  .contacto-form-wrap__title { font-size: var(--text-2xl); margin-bottom: 0.25rem; }
+  .contacto-form-wrap__sub   { color: var(--color-text-muted); margin-bottom: 2rem; }
+
+  .contacto-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-label {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .form-label span { color: var(--color-brand-primary); }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-surface);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    outline: none;
+    appearance: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--color-brand-primary);
+    box-shadow: 0 0 0 3px rgba(42, 76, 144, 0.12);
+  }
+
+  .form-input::placeholder { color: var(--color-border-strong); }
+
+  .form-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%235C6780' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2.5rem; }
+
+  .form-textarea { resize: vertical; min-height: 120px; }
+
+  .form-group--check { flex-direction: row; align-items: flex-start; }
+
+  .form-check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    line-height: 1.5;
+  }
+
+  .form-check {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+    accent-color: var(--color-brand-primary);
+    cursor: pointer;
+  }
+
+  .contacto-form__submit { align-self: flex-start; padding: 0.875rem 2rem; }
+
+  .form-note {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* ── INFO ── */
+  .contacto-info {
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+  }
+
+  .contacto-info__title { font-size: var(--text-xl); margin-bottom: 1.5rem; }
+
+  .contacto-info__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contacto-info__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .contacto-info__icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+  .contacto-info__item strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.1rem; }
+  .contacto-info__item a,
+  .contacto-info__item span { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+  .contacto-info__horario { border-top: 1px solid var(--color-border); padding-top: 1.25rem; }
+  .contacto-info__horario h3 { font-size: var(--text-base); margin-bottom: 0.25rem; }
+  .contacto-info__horario p  { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .contacto-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 500px) {
+    .contacto-form__submit { width: 100%; }
+  }
+</style>

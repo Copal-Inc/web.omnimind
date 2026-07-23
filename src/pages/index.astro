@@ -1,49 +1,732 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Últimos 3 posts para la sección de blog
+const allPosts = await getCollection("blog");
+const recentPosts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => {
+    const da = a.data.publishDate || a.data.pubDate || new Date(0);
+    const db = b.data.publishDate || b.data.pubDate || new Date(0);
+    return db.valueOf() - da.valueOf();
+  })
+  .slice(0, 3);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout
+  title="OMNIMIND — Reinventando la Productividad"
+  description="Workshops e intervenciones organizacionales basadas en evidencia. Empowermind, Wealth & Mind y Neurowise para equipos que buscan crecer."
+>
+  <!-- ════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Hero — propuesta de valor principal">
+    <!-- Imagen de fondo (placeholder hasta tener foto oficial aprobada) -->
+    <div class="hero__bg" aria-hidden="true"></div>
+
+    <div class="container hero__content">
+      <p class="hero__eyebrow">
+        Intervenciones organizacionales basadas en evidencia
+      </p>
+      <h1 class="hero__title">
+        Reinventando la<br />
+        <span class="hero__title-accent">Productividad</span>
+      </h1>
+      <p class="hero__body">
+        Somos una empresa dedicada al crecimiento de las personas, enfocándonos
+        en el equilibrio para lograr una vida exitosa y plena. Nos
+        especializamos en talleres y comunidades tanto empresariales como
+        sociales.
+      </p>
+      <div class="hero__actions">
+        <a href="/contacto/" class="btn btn-primary hero__cta-primary">
+          Solicitar cotización
+        </a>
+        <a href="/servicios/" class="btn btn-outline hero__cta-secondary">
+          Explorar soluciones
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       TIRA DE CREDIBILIDAD (placeholder)
+  ════════════════════════════════════════════════ -->
+  <section
+    class="credibility-strip section-muted"
+    aria-label="Indicadores de credibilidad"
+  >
+    <div class="container credibility-strip__inner">
+      <div class="credibility-item">
+        <span class="credibility-item__number">+50</span>
+        <span class="credibility-item__label">Organizaciones acompañadas</span>
+      </div>
+      <div class="credibility-divider" aria-hidden="true"></div>
+      <div class="credibility-item">
+        <span class="credibility-item__number">3</span>
+        <span class="credibility-item__label">Líneas de intervención</span>
+      </div>
+      <div class="credibility-divider" aria-hidden="true"></div>
+      <div class="credibility-item">
+        <span class="credibility-item__number">100%</span>
+        <span class="credibility-item__label">Talleres a medida</span>
+      </div>
+      <div class="credibility-divider" aria-hidden="true"></div>
+      <div class="credibility-item">
+        <span class="credibility-item__number">B2B</span>
+        <span class="credibility-item__label">Enfoque empresarial</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       LÍNEAS DE SERVICIO
+  ════════════════════════════════════════════════ -->
+  <section class="section services" aria-labelledby="services-heading">
+    <div class="container">
+      <div class="section-heading">
+        <span class="section-heading__eyebrow">Nuestras soluciones</span>
+        <h2 class="section-heading__title" id="services-heading">
+          Tres líneas de intervención, un solo propósito
+        </h2>
+        <p class="section-heading__body">
+          Diseñamos e implementamos talleres y programas para organizaciones que
+          buscan mejorar el bienestar, la productividad y la resiliencia de sus
+          equipos.
+        </p>
+      </div>
+
+      <div class="grid-3 services__grid">
+        <!-- Empowermind -->
+        <article class="service-card service-card--empowermind">
+          <div class="service-card__img-wrap">
+            <!-- Placeholder de imagen — pendiente foto aprobada -->
+            <div
+              class="img-placeholder service-card__img-placeholder"
+              aria-label="Imagen Empowermind — placeholder"
+            >
+              🧑‍💼 Empowermind
+            </div>
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__badge" aria-hidden="true">01</div>
+            <h3 class="service-card__title">
+              <a href="/servicios/empowermind/" class="service-card__link"
+                >Empowermind</a
+              >
+            </h3>
+            <p class="service-card__desc">
+              Creamos ambientes y habilidades laborales que benefician la
+              productividad y el desarrollo de los individuos en los equipos de
+              trabajo.
+            </p>
+            <ul class="service-card__tags" role="list">
+              <li>Organización</li>
+              <li>Productividad</li>
+              <li>Liderazgo</li>
+            </ul>
+            <a
+              href="/servicios/empowermind/"
+              class="btn btn-outline-dark service-card__cta"
+            >
+              Conocer más →
+            </a>
+          </div>
+        </article>
+
+        <!-- Neurowise -->
+        <article class="service-card service-card--neurowise">
+          <div class="service-card__img-wrap">
+            <div
+              class="img-placeholder service-card__img-placeholder"
+              aria-label="Imagen Neurowise — placeholder"
+            >
+              🧠 Neurowise
+            </div>
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__badge" aria-hidden="true">02</div>
+            <h3 class="service-card__title">
+              <a href="/servicios/neurowise/" class="service-card__link"
+                >Neurowise</a
+              >
+            </h3>
+            <p class="service-card__desc">
+              Consultoría e intervenciones basadas en el estado del arte de la
+              investigación en neurociencias para mejorar la productividad de tu
+              equipo.
+            </p>
+            <ul class="service-card__tags" role="list">
+              <li>Neurociencias</li>
+              <li>Flexibilidad cognitiva</li>
+              <li>Adaptabilidad</li>
+            </ul>
+            <a
+              href="/servicios/neurowise/"
+              class="btn btn-outline-dark service-card__cta"
+            >
+              Conocer más →
+            </a>
+          </div>
+        </article>
+
+        <!-- Wealth & Mind -->
+        <article class="service-card service-card--wealth">
+          <div class="service-card__img-wrap">
+            <div
+              class="img-placeholder service-card__img-placeholder"
+              aria-label="Imagen Wealth & Mind — placeholder"
+            >
+              🌱 Wealth & Mind
+            </div>
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__badge" aria-hidden="true">03</div>
+            <h3 class="service-card__title">
+              <a href="/servicios/wealth-mind/" class="service-card__link"
+                >Wealth & Mind</a
+              >
+            </h3>
+            <p class="service-card__desc">
+              Ponemos la salud mental al frente. Intervenciones para prevenir
+              riesgos psicosociales y crear ambientes saludables en empresas o
+              comunidades.
+            </p>
+            <ul class="service-card__tags" role="list">
+              <li>Salud mental</li>
+              <li>Bienestar</li>
+              <li>Riesgos psicosociales</li>
+            </ul>
+            <a
+              href="/servicios/wealth-mind/"
+              class="btn btn-outline-dark service-card__cta"
+            >
+              Conocer más →
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       SOBRE OMNIMIND (breve introducción)
+  ════════════════════════════════════════════════ -->
+  <section
+    class="section section-muted about-intro"
+    aria-labelledby="about-heading"
+  >
+    <div class="container about-intro__grid">
+      <div class="about-intro__image">
+        <!-- Placeholder de imagen del equipo — pendiente foto aprobada -->
+        <div
+          class="img-placeholder about-intro__img-placeholder"
+          aria-label="Equipo Omnimind — imagen placeholder"
+        >
+          📸 Foto del equipo<br />(pendiente aprobación)
+        </div>
+      </div>
+      <div class="about-intro__content">
+        <span class="section-heading__eyebrow">Sobre nosotras</span>
+        <h2 id="about-heading">Una empresa dedicada al crecimiento humano</h2>
+        <p>
+          En Omnimind creemos que una mente sana es una mente próspera. Por eso
+          diseñamos e implementamos intervenciones organizacionales con base
+          científica, siempre dándole el toque humano a todo nuestro trabajo.
+        </p>
+        <p>
+          Nos especializamos en el manejo de comunidades tanto empresariales
+          como sociales, acompañando a organizaciones en su camino hacia el
+          bienestar y la productividad sostenible.
+        </p>
+        <a href="/sobre-nosotras/" class="btn btn-primary">
+          Conocer nuestro equipo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       ARTÍCULOS RECIENTES
+  ════════════════════════════════════════════════ -->
+  {
+    recentPosts.length > 0 && (
+      <section class="section blog-recent" aria-labelledby="blog-heading">
+        <div class="container">
+          <div class="section-heading">
+            <span class="section-heading__eyebrow">Blog y recursos</span>
+            <h2 class="section-heading__title" id="blog-heading">
+              Últimos artículos
+            </h2>
+            <p class="section-heading__body">
+              Contenido basado en evidencia sobre productividad, bienestar y
+              neurociencias aplicadas a las organizaciones.
+            </p>
+          </div>
+
+          <div class="grid-3 blog-recent__grid">
+            {recentPosts.map((post) => {
+              const date = post.data.publishDate || post.data.pubDate;
+              return (
+                <article class="blog-card">
+                  <div class="blog-card__img-wrap">
+                    <div
+                      class="img-placeholder blog-card__img"
+                      aria-label={`Imagen del artículo: ${post.data.title}`}
+                    >
+                      📰 Blog
+                    </div>
+                  </div>
+                  <div class="blog-card__body">
+                    {post.data.category && (
+                      <span class="blog-card__category">
+                        {post.data.category}
+                      </span>
+                    )}
+                    <h3 class="blog-card__title">
+                      <a href={`/blog/${post.id}/`} class="blog-card__link">
+                        {post.data.title}
+                      </a>
+                    </h3>
+                    <p class="blog-card__excerpt">{post.data.description}</p>
+                    {date && (
+                      <time
+                        class="blog-card__date"
+                        datetime={date.toISOString()}
+                      >
+                        {date.toLocaleDateString("es-MX", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </time>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div class="blog-recent__more">
+            <a href="/blog/" class="btn btn-outline-dark">
+              Ver todos los artículos
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ════════════════════════════════════════════════
+       CTA FINAL — COTIZACIÓN
+  ════════════════════════════════════════════════ -->
+  <section
+    class="section section-dark quote-cta"
+    aria-labelledby="quote-cta-heading"
+  >
+    <div class="container quote-cta__inner">
+      <div class="quote-cta__content">
+        <h2 id="quote-cta-heading" class="quote-cta__title">
+          ¿Listo para transformar tu organización?
+        </h2>
+        <p class="quote-cta__body">
+          Cuéntanos el reto que enfrenta tu equipo y diseñamos una intervención
+          a la medida de tu organización.
+        </p>
+        <div class="quote-cta__actions">
+          <a href="/contacto/" class="btn btn-accent">
+            Solicitar una cotización
+          </a>
+          <a href="/servicios/" class="btn btn-outline">
+            Explorar soluciones
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(26, 35, 126, 0.88) 0%,
+        rgba(42, 76, 144, 0.75) 50%,
+        rgba(26, 35, 126, 0.65) 100%
+      ),
+      /* Placeholder de imagen — pendiente foto de taller aprobada */
+      linear-gradient(160deg, #1a237e 0%, #2a4c90 60%, #34ab9f 100%);
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    padding-block: 5rem;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .hero__eyebrow {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .hero__title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero__title-accent {
+    color: var(--color-accent);
+  }
+
+  .hero__body {
+    font-size: var(--text-lg);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 780px;
+    margin-inline: auto;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* ── CREDIBILITY STRIP ── */
+  .credibility-strip {
+    padding-block: 3rem;
+    border-block: 1px solid var(--color-border);
+  }
+
+  .credibility-strip__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5rem;
+    flex-wrap: wrap;
+  }
+
+  .credibility-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+  }
+
+  .credibility-item__number {
+    font-family: var(--font-heading);
+    font-size: var(--text-5xl);
+    font-weight: 650;
+    color: var(--color-brand-primary);
+    line-height: 1;
+  }
+
+  .credibility-item__label {
+    font-size: var(--text-m);
+    padding-top: 0.5rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    max-width: 120px;
+    text-align: center;
+  }
+
+  .credibility-divider {
+    width: 2px;
+    height: 70px;
+    background: var(--color-border);
+    flex-shrink: 0;
+  }
+
+  /* ── SERVICE CARDS ── */
+  .services__grid {
+    align-items: start;
+  }
+
+  .service-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition:
+      box-shadow var(--transition-slow),
+      transform var(--transition-slow);
+  }
+
+  .service-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  .service-card__img-placeholder {
+    min-height: 180px;
+    border-radius: 0;
+  }
+
+  .service-card__body {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .service-card__badge {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-border);
+    line-height: 1;
+    margin-bottom: -0.25rem;
+  }
+
+  .service-card__title {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+
+  .service-card__link {
+    color: var(--color-brand-primary);
+    text-decoration: none;
+  }
+
+  .service-card__link:hover {
+    color: var(--color-accent-dark);
+    text-decoration: underline;
+  }
+
+  .service-card__desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .service-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .service-card__tags li {
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    padding: 0.2em 0.6em;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+  }
+
+  .service-card__cta {
+    margin-top: auto;
+    align-self: flex-start;
+    font-size: var(--text-sm);
+    padding: 0.5rem 1.1rem;
+  }
+
+  /* ── ABOUT INTRO ── */
+  .about-intro__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-intro__img-placeholder {
+    min-height: 320px;
+    border-radius: var(--radius-lg);
+  }
+
+  .about-intro__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .about-intro__content h2 {
+    margin-top: 0.5rem;
+  }
+
+  .about-intro__content p {
+    color: var(--color-text-muted);
+  }
+
+  /* ── BLOG CARDS ── */
+  .blog-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition:
+      box-shadow var(--transition-slow),
+      transform var(--transition-slow);
+  }
+
+  .blog-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  .blog-card__img {
+    min-height: 160px;
+    border-radius: 0;
+  }
+
+  .blog-card__body {
+    padding: 1.25rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .blog-card__category {
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-dark);
+  }
+
+  .blog-card__title {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+
+  .blog-card__link {
+    color: var(--color-brand-primary);
+    text-decoration: none;
+  }
+
+  .blog-card__link:hover {
+    text-decoration: underline;
+  }
+
+  .blog-card__excerpt {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+    flex: 1;
+    line-height: 1.6;
+
+    /* Limitar a 3 líneas */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .blog-card__date {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+    margin-top: 0.5rem;
+  }
+
+  .blog-recent__more {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  /* ── QUOTE CTA ── */
+  .quote-cta__inner {
+    text-align: center;
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  .quote-cta__title {
+    font-size: clamp(var(--text-2xl), 3vw, var(--text-4xl));
+    margin-bottom: 1rem;
+  }
+
+  .quote-cta__body {
+    font-size: var(--text-lg);
+    margin-bottom: 2rem;
+    color: var(--color-text-on-dark-soft);
+  }
+
+  .quote-cta__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .about-intro__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .credibility-divider {
+      display: none;
+    }
+
+    .credibility-strip__inner {
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero__actions {
+      flex-direction: column;
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .quote-cta__actions {
+      flex-direction: column;
+    }
+
+    .quote-cta__actions .btn {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Wealth & Mind"
+  description="Wealth & Mind: intervenciones para prevenir riesgos psicosociales, mejorar la salud mental y crear ambientes de trabajo saludables en empresas y comunidades."
+>
+
+  <!-- HERO -->
+  <section class="servdetail-hero section-dark" aria-label="Wealth & Mind">
+    <div class="container servdetail-hero__inner">
+      <span class="section-heading__eyebrow">Línea de intervención 03</span>
+      <h1 class="servdetail-hero__title">Wealth &amp; Mind</h1>
+      <p class="servdetail-hero__lead">
+        Ponemos la salud mental al frente. Intervenciones para prevenir
+        riesgos psicosociales y crear ambientes saludables en empresas o comunidades.
+      </p>
+      <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
+    </div>
+  </section>
+
+  <!-- QUÉ ES -->
+  <section class="section" aria-labelledby="que-es-wealth">
+    <div class="container servdetail-intro">
+      <div class="servdetail-intro__text">
+        <span class="section-heading__eyebrow">¿Qué es?</span>
+        <h2 id="que-es-wealth">Salud mental como ventaja competitiva</h2>
+        <p>
+          Wealth &amp; Mind es nuestra línea dedicada al bienestar psicológico.
+          Diseñamos programas para prevenir el burnout, gestionar el estrés
+          laboral y cumplir con normativas como la NOM-035 de forma genuina,
+          no solo en papel.
+        </p>
+        <p>
+          Una organización saludable es más productiva, retiene mejor el
+          talento y genera un impacto positivo en las personas que la forman.
+          Nosotras te ayudamos a llegar ahí.
+        </p>
+      </div>
+      <div class="servdetail-intro__media">
+        <div class="img-placeholder" aria-label="Imagen Wealth & Mind — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
+          🌱 Taller Wealth &amp; Mind<br />(pendiente imagen aprobada)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÓDULOS -->
+  <section class="section section-muted" aria-labelledby="modulos-wealth">
+    <div class="container">
+      <div class="section-heading">
+        <span class="section-heading__eyebrow">Lo que incluye</span>
+        <h2 class="section-heading__title" id="modulos-wealth">Módulos y talleres</h2>
+        <p class="section-heading__body">
+          Programas personalizados para empresas y comunidades de todos los
+          tamaños, en formato presencial, híbrido o en línea.
+        </p>
+      </div>
+      <ul class="modulos-grid" role="list">
+        <li class="modulo-card">
+          <span class="modulo-card__icon" aria-hidden="true">🧘</span>
+          <h3 class="modulo-card__title">Gestión del estrés</h3>
+          <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
+        </li>
+        <li class="modulo-card">
+          <span class="modulo-card__icon" aria-hidden="true">📋</span>
+          <h3 class="modulo-card__title">NOM-035 y riesgos psicosociales</h3>
+          <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
+        </li>
+        <li class="modulo-card">
+          <span class="modulo-card__icon" aria-hidden="true">🔥</span>
+          <h3 class="modulo-card__title">Prevención del burnout</h3>
+          <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
+        </li>
+        <li class="modulo-card">
+          <span class="modulo-card__icon" aria-hidden="true">❤️</span>
+          <h3 class="modulo-card__title">Clima organizacional saludable</h3>
+          <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section-dark" aria-labelledby="cta-wm-heading">
+    <div class="container cta-simple">
+      <h2 id="cta-wm-heading">¿Tu organización necesita un ambiente más saludable?</h2>
+      <p>Empecemos con un diagnóstico. Cuéntanos cómo está tu equipo hoy.</p>
+      <div class="cta-actions">
+        <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
+        <a href="/servicios/" class="btn btn-outline">Ver todas las soluciones</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .servdetail-hero { padding-block: 4.5rem 4rem; }
+  .servdetail-hero__inner {
+    max-width: 720px; text-align: center; margin-inline: auto;
+    display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+  }
+  .servdetail-hero__title { font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl)); color: var(--color-text-on-dark); margin: 0; }
+  .servdetail-hero__lead  { font-size: var(--text-lg); color: var(--color-text-on-dark-soft); margin: 0; max-width: 600px; }
+
+  .servdetail-intro {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .servdetail-intro__text { display: flex; flex-direction: column; gap: 0.75rem; }
+  .servdetail-intro__text h2 { margin-top: 0.25rem; }
+  .servdetail-intro__text p  { color: var(--color-text-muted); margin: 0; }
+
+  .modulos-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem; list-style: none; padding: 0; margin: 0;
+  }
+  .modulo-card {
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-slow), transform var(--transition-slow);
+  }
+  .modulo-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .modulo-card__icon  { font-size: 2rem; display: block; margin-bottom: 0.75rem; }
+  .modulo-card__title { font-size: var(--text-xl); margin-bottom: 0.5rem; }
+  .modulo-card__body  { color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6; margin: 0; }
+
+  .cta-simple {
+    text-align: center; max-width: 600px; margin-inline: auto;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  }
+  .cta-simple h2 { color: var(--color-text-on-dark); margin: 0; }
+  .cta-simple p  { color: var(--color-text-on-dark-soft); margin: 0; }
+  .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+  @media (max-width: 768px) {
+    .servdetail-intro { grid-template-columns: 1fr; gap: 2rem; }
+  }
+</style>
