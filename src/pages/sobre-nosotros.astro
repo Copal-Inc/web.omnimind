@@ -1,4 +1,7 @@
 ---
+import { url } from '../lib/url';
+import NeuralField from "../components/NeuralField.astro";
+import PageHero from "../components/PageHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -9,26 +12,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <!-- ════════════════════════════════════════════
        HERO INTERNO
   ════════════════════════════════════════════ -->
-  <section class="page-hero section-dark" aria-label="Sobre Omnimind">
-    <div class="container page-hero__inner">
-      <span class="section-heading__eyebrow">Sobre nosotras</span>
-      <h1 class="page-hero__title">
-        Una empresa dedicada<br />al crecimiento humano
-      </h1>
-      <p class="page-hero__lead">
-        En Omnimind creemos que una mente sana es una mente próspera. Por eso
-        diseñamos e implementamos intervenciones organizacionales con base
-        científica, siempre dándole el toque humano a todo nuestro trabajo.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Sobre nosotras"
+    title="Una empresa dedicada<br />al crecimiento humano"
+    lead="En Omnimind creemos que una mente sana es una mente próspera. Por eso diseñamos e implementamos intervenciones organizacionales con base científica, siempre dándole el toque humano a todo nuestro trabajo."
+    label="Sobre Omnimind"
+  />
 
   <!-- ════════════════════════════════════════════
        MISIÓN Y VISIÓN
   ════════════════════════════════════════════ -->
   <section class="section" aria-labelledby="mision-heading">
-    <div class="container mv-grid">
-      <div class="mv-card mv-card--mision">
+    <div class="container mv-grid" data-stagger="140">
+      <div class="mv-card mv-card--mision" data-reveal="left" data-spotlight>
         <div class="mv-card__icon" aria-hidden="true">🎯</div>
         <h2 class="mv-card__title" id="mision-heading">Nuestra misión</h2>
         <p class="mv-card__body">
@@ -37,7 +33,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           intervenciones basadas en evidencia científica.
         </p>
       </div>
-      <div class="mv-card mv-card--vision">
+      <div class="mv-card mv-card--vision" data-reveal="right" data-spotlight>
         <div class="mv-card__icon" aria-hidden="true">🌐</div>
         <h2 class="mv-card__title">Nuestra visión</h2>
         <p class="mv-card__body">
@@ -54,14 +50,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ════════════════════════════════════════════ -->
   <section class="section section-muted" aria-labelledby="valores-heading">
     <div class="container">
-      <div class="section-heading">
-        <span class="section-heading__eyebrow">Lo que nos define</span>
-        <h2 class="section-heading__title" id="valores-heading">
+      <div class="section-heading" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="up">Lo que nos define</span>
+        <h2 class="section-heading__title" id="valores-heading" data-reveal="up">
           Nuestros valores
         </h2>
       </div>
-      <ul class="valores-grid" role="list">
-        <li class="valor-card">
+      <ul class="valores-grid" role="list" data-stagger="110">
+        <li class="valor-card" data-reveal="up" data-tilt="4" data-spotlight>
           <span class="valor-card__icon" aria-hidden="true">🔬</span>
           <h3 class="valor-card__title">Basadas en evidencia</h3>
           <p class="valor-card__body">
@@ -70,7 +66,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             demuestra que funciona.
           </p>
         </li>
-        <li class="valor-card">
+        <li class="valor-card" data-reveal="up" data-tilt="4" data-spotlight>
           <span class="valor-card__icon" aria-hidden="true">🤝</span>
           <h3 class="valor-card__title">Toque humano</h3>
           <p class="valor-card__body">
@@ -79,7 +75,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             organización.
           </p>
         </li>
-        <li class="valor-card">
+        <li class="valor-card" data-reveal="up" data-tilt="4" data-spotlight>
           <span class="valor-card__icon" aria-hidden="true">♻️</span>
           <h3 class="valor-card__title">Impacto sostenible</h3>
           <p class="valor-card__body">
@@ -87,7 +83,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             que las propias organizaciones pueden mantener y escalar.
           </p>
         </li>
-        <li class="valor-card">
+        <li class="valor-card" data-reveal="up" data-tilt="4" data-spotlight>
           <span class="valor-card__icon" aria-hidden="true">🌱</span>
           <h3 class="valor-card__title">Crecimiento integral</h3>
           <p class="valor-card__body">
@@ -104,22 +100,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ════════════════════════════════════════════ -->
   <section class="section" aria-labelledby="equipo-heading">
     <div class="container">
-      <div class="section-heading">
-        <span class="section-heading__eyebrow">Las personas detrás</span>
-        <h2 class="section-heading__title" id="equipo-heading">
+      <div class="section-heading" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="up">Las personas detrás</span>
+        <h2 class="section-heading__title" id="equipo-heading" data-reveal="up">
           Nuestro equipo
         </h2>
-        <p class="section-heading__body">
+        <p class="section-heading__body" data-reveal="up">
           Un equipo multidisciplinario de psicólogas, coaches y especialistas en
           neurociencias comprometidas con tu organización.
         </p>
       </div>
 
-      <div class="grid-3 team-grid">
+      <div class="grid-3 team-grid" data-stagger="130">
         <!-- Placeholder — pendiente fotos y bios aprobadas -->
-        <article class="team-card">
+        <article class="team-card card-hover" data-reveal="up" data-spotlight>
           <div
-            class="img-placeholder team-card__photo"
+            class="img-placeholder team-card__photo card-media"
             aria-label="Foto del equipo — pendiente"
           >
             👤 Integrante del equipo
@@ -132,9 +128,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </p>
           </div>
         </article>
-        <article class="team-card">
+        <article class="team-card card-hover" data-reveal="up" data-spotlight>
           <div
-            class="img-placeholder team-card__photo"
+            class="img-placeholder team-card__photo card-media"
             aria-label="Foto del equipo — pendiente"
           >
             👤 Integrante del equipo
@@ -147,9 +143,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </p>
           </div>
         </article>
-        <article class="team-card">
+        <article class="team-card card-hover" data-reveal="up" data-spotlight>
           <div
-            class="img-placeholder team-card__photo"
+            class="img-placeholder team-card__photo card-media"
             aria-label="Foto del equipo — pendiente"
           >
             👤 Integrante del equipo
@@ -170,41 +166,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
        CTA
   ════════════════════════════════════════════ -->
   <section class="section section-dark" aria-labelledby="cta-about-heading">
-    <div class="container cta-simple">
-      <h2 id="cta-about-heading">¿Quieres conocer más sobre nosotras?</h2>
-      <p>
+    <NeuralField density={0.6} />
+    <div class="container cta-simple" data-stagger="110">
+      <h2 id="cta-about-heading" data-reveal="up">¿Quieres conocer más sobre nosotras?</h2>
+      <p data-reveal="up">
         Platícanos sobre tu organización y diseñamos una solución a la medida.
       </p>
-      <a href="/contacto/" class="btn btn-accent">Escríbenos</a>
+      <a href={url("/contacto/")} class="btn btn-accent" data-reveal="up" data-magnetic="0.18">
+        <span class="btn__label">Escríbenos</span>
+      </a>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  /* ── PAGE HERO ── */
-  .page-hero {
-    padding-block: 4rem 3.5rem;
-  }
-
-  .page-hero__inner {
-    text-align: center;
-    max-width: 760px;
-    margin-inline: auto;
-  }
-
-  .page-hero__title {
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
-    color: var(--color-text-on-dark);
-    margin-block: 0.75rem 1.25rem;
-  }
-
-  .page-hero__lead {
-    font-size: var(--text-lg);
-    color: var(--color-text-on-dark-soft);
-    line-height: 1.7;
-    margin: 0;
-  }
-
   /* ── MISIÓN / VISIÓN ── */
   .mv-grid {
     display: grid;
@@ -230,10 +205,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border-top: 4px solid var(--color-accent);
   }
 
+  .mv-card {
+    transition:
+      box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-quart, ease);
+  }
+
+  .mv-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-5px);
+  }
+
   .mv-card__icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     display: block;
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .mv-card:hover .mv-card__icon {
+    transform: scale(1.15) rotate(6deg);
   }
 
   .mv-card__title {
@@ -263,20 +254,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border-radius: var(--radius-lg);
     padding: 2rem;
     box-shadow: var(--shadow-sm);
+    /* El desplazamiento lo aporta data-tilt (--lift); aquí solo el realce */
     transition:
-      box-shadow var(--transition-slow),
-      transform var(--transition-slow);
+      box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      border-color var(--dur-3, 0.45s) var(--ease-out-quart, ease);
   }
 
   .valor-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(52, 171, 159, 0.45);
   }
 
   .valor-card__icon {
     font-size: 2rem;
     display: block;
     margin-bottom: 0.75rem;
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .valor-card:hover .valor-card__icon {
+    transform: scale(1.18) rotate(-6deg);
   }
 
   .valor-card__title {
@@ -304,8 +301,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .team-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(52, 171, 159, 0.4);
+    transform: translateY(-5px);
+  }
+
+  .team-card__name {
+    transition: color var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  .team-card:hover .team-card__name {
+    color: var(--color-accent-dark);
   }
 
   .team-card__photo {

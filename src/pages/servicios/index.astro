@@ -1,4 +1,7 @@
 ---
+import { url } from '../../lib/url';
+import PageHero from '../../components/PageHero.astro';
+import NeuralField from '../../components/NeuralField.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
@@ -10,16 +13,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- ════════════════════════════════════════════
        HERO INTERNO
   ════════════════════════════════════════════ -->
-  <section class="page-hero section-dark" aria-label="Soluciones Omnimind">
-    <div class="container page-hero__inner">
-      <span class="section-heading__eyebrow">Nuestras soluciones</span>
-      <h1 class="page-hero__title">Tres líneas de intervención,<br />un solo propósito</h1>
-      <p class="page-hero__lead">
-        Diseñamos e implementamos talleres y programas para organizaciones que
-        buscan mejorar el bienestar, la productividad y la resiliencia de sus equipos.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Nuestras soluciones"
+    title="Tres líneas de intervención,<br />un solo propósito"
+    lead="Diseñamos e implementamos talleres y programas para organizaciones que buscan mejorar el bienestar, la productividad y la resiliencia de sus equipos."
+    label="Soluciones Omnimind"
+  />
 
   <!-- ════════════════════════════════════════════
        TARJETAS DE SERVICIOS
@@ -29,13 +28,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <h2 class="sr-only" id="servicios-lista-heading">Lista de servicios</h2>
 
       <!-- Empowermind -->
-      <article class="servicio-row" aria-labelledby="empowermind-heading">
-        <div class="servicio-row__media">
-          <div class="img-placeholder servicio-row__img" aria-label="Imagen Empowermind — placeholder">
+      <article class="servicio-row" aria-labelledby="empowermind-heading" data-stagger="110">
+        <div class="servicio-row__media" data-reveal="left">
+          <div class="img-placeholder servicio-row__img" data-spotlight aria-label="Imagen Empowermind — placeholder">
             🧑‍💼 Empowermind
           </div>
         </div>
-        <div class="servicio-row__content">
+        <div class="servicio-row__content" data-reveal="right">
           <span class="servicio-row__num" aria-hidden="true">01</span>
           <h2 class="servicio-row__title" id="empowermind-heading">Empowermind</h2>
           <p class="servicio-row__desc">
@@ -50,22 +49,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <li>Liderazgo</li>
             <li>Comunicación</li>
           </ul>
-          <a href="/servicios/empowermind/" class="btn btn-primary">
+          <a href={url("/servicios/empowermind/")} class="btn btn-primary">
             Ver Empowermind →
           </a>
         </div>
       </article>
 
-      <hr class="servicio-divider" aria-hidden="true" />
+      <hr class="servicio-divider" aria-hidden="true" data-reveal="scale" />
 
       <!-- Neurowise -->
-      <article class="servicio-row servicio-row--reverse" aria-labelledby="neurowise-heading">
-        <div class="servicio-row__media">
-          <div class="img-placeholder servicio-row__img" aria-label="Imagen Neurowise — placeholder">
+      <article class="servicio-row servicio-row--reverse" aria-labelledby="neurowise-heading" data-stagger="110">
+        <div class="servicio-row__media" data-reveal="right">
+          <div class="img-placeholder servicio-row__img" data-spotlight aria-label="Imagen Neurowise — placeholder">
             🧠 Neurowise
           </div>
         </div>
-        <div class="servicio-row__content">
+        <div class="servicio-row__content" data-reveal="right">
           <span class="servicio-row__num" aria-hidden="true">02</span>
           <h2 class="servicio-row__title" id="neurowise-heading">Neurowise</h2>
           <p class="servicio-row__desc">
@@ -80,22 +79,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <li>Adaptabilidad</li>
             <li>Resiliencia</li>
           </ul>
-          <a href="/servicios/neurowise/" class="btn btn-primary">
+          <a href={url("/servicios/neurowise/")} class="btn btn-primary">
             Ver Neurowise →
           </a>
         </div>
       </article>
 
-      <hr class="servicio-divider" aria-hidden="true" />
+      <hr class="servicio-divider" aria-hidden="true" data-reveal="scale" />
 
       <!-- Wealth & Mind -->
-      <article class="servicio-row" aria-labelledby="wealth-heading">
-        <div class="servicio-row__media">
-          <div class="img-placeholder servicio-row__img" aria-label="Imagen Wealth & Mind — placeholder">
+      <article class="servicio-row" aria-labelledby="wealth-heading" data-stagger="110">
+        <div class="servicio-row__media" data-reveal="left">
+          <div class="img-placeholder servicio-row__img" data-spotlight aria-label="Imagen Wealth & Mind — placeholder">
             🌱 Wealth & Mind
           </div>
         </div>
-        <div class="servicio-row__content">
+        <div class="servicio-row__content" data-reveal="right">
           <span class="servicio-row__num" aria-hidden="true">03</span>
           <h2 class="servicio-row__title" id="wealth-heading">Wealth &amp; Mind</h2>
           <p class="servicio-row__desc">
@@ -109,7 +108,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <li>Riesgos psicosociales</li>
             <li>NOM-035</li>
           </ul>
-          <a href="/servicios/wealth-mind/" class="btn btn-primary">
+          <a href={url("/servicios/wealth-mind/")} class="btn btn-primary">
             Ver Wealth &amp; Mind →
           </a>
         </div>
@@ -120,41 +119,20 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- ════════════════════════════════════════════
        CTA COTIZACIÓN
   ════════════════════════════════════════════ -->
-  <section class="section section-dark" aria-labelledby="cta-servicios-heading">
-    <div class="container cta-simple">
-      <h2 id="cta-servicios-heading">¿No sabes cuál se adapta mejor a tu empresa?</h2>
-      <p>Platícanos el reto y te recomendamos la intervención ideal — o una combinación.</p>
-      <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
+  <section class="section section-dark cta-section" aria-labelledby="cta-servicios-heading">
+    <NeuralField density={0.6} />
+    <div class="container cta-simple" data-stagger="110">
+      <h2 id="cta-servicios-heading" data-reveal="up">¿No sabes cuál se adapta mejor a tu empresa?</h2>
+      <p data-reveal="up">Platícanos el reto y te recomendamos la intervención ideal — o una combinación.</p>
+      <a href={url("/contacto/")} class="btn btn-accent" data-reveal="up" data-magnetic="0.18">
+        <span class="btn__label">Solicitar cotización</span>
+      </a>
     </div>
   </section>
 
 </BaseLayout>
 
 <style>
-  /* ── PAGE HERO ── */
-  .page-hero {
-    padding-block: 4rem 3.5rem;
-  }
-
-  .page-hero__inner {
-    text-align: center;
-    max-width: 760px;
-    margin-inline: auto;
-  }
-
-  .page-hero__title {
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
-    color: var(--color-text-on-dark);
-    margin-block: 0.75rem 1.25rem;
-  }
-
-  .page-hero__lead {
-    font-size: var(--text-lg);
-    color: var(--color-text-on-dark-soft);
-    line-height: 1.7;
-    margin: 0;
-  }
-
   /* ── SERVICIO ROW ── */
   .servicio-row {
     display: grid;

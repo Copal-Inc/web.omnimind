@@ -1,0 +1,124 @@
+---
+/**
+ * PageHero.astro — Encabezado animado de páginas internas.
+ *
+ * Unifica el hero que antes se repetía (y se desincronizaba) en
+ * servicios, contacto, blog, sobre-nosotros y las páginas de detalle.
+ *
+ * Incluye el campo neuronal de fondo, parallax de cursor y entrada
+ * escalonada del texto. El contenido del slot por defecto se coloca
+ * bajo el texto (para CTAs).
+ *
+ * Props:
+ *   eyebrow — texto pequeño superior (opcional)
+ *   title   — admite HTML simple (<br />, &amp;…)
+ *   lead    — párrafo introductorio (opcional)
+ *   size    — "md" (páginas de listado) | "lg" (detalle de servicio)
+ *   label   — aria-label de la sección
+ */
+import NeuralField from "./NeuralField.astro";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  size?: "md" | "lg";
+  label?: string;
+}
+
+const { eyebrow, title, lead, size = "md", label } = Astro.props;
+---
+
+<section
+  class:list={["page-hero", "section-dark", `page-hero--${size}`]}
+  aria-label={label}
+  data-mouse-parallax
+>
+  <NeuralField density={size === "lg" ? 0.9 : 0.75} parallax />
+
+  <div class="container page-hero__inner">
+    {
+      eyebrow && (
+        <span
+          class="section-heading__eyebrow page-hero__eyebrow"
+          data-enter
+          style="--enter-delay: 80ms"
+        >
+          {eyebrow}
+        </span>
+      )
+    }
+
+    <h1 class="page-hero__title" data-enter style="--enter-delay: 180ms" set:html={title} />
+
+    {
+      lead && (
+        <p class="page-hero__lead" data-enter style="--enter-delay: 290ms">
+          {lead}
+        </p>
+      )
+    }
+
+    {
+      Astro.slots.has("default") && (
+        <div class="page-hero__actions" data-enter style="--enter-delay: 400ms">
+          <slot />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: 4.5rem 4rem;
+  }
+
+  .page-hero--lg {
+    padding-block: 5.5rem 5rem;
+  }
+
+  .page-hero__inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .page-hero__eyebrow {
+    display: inline-block;
+    font-size: var(--text-sm);
+    letter-spacing: 0.14em;
+  }
+
+  .page-hero__title {
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+    color: var(--color-text-on-dark);
+    margin-block: 0.75rem 1.25rem;
+    text-wrap: balance;
+  }
+
+  .page-hero--lg .page-hero__title {
+    font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+  }
+
+  .page-hero__lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-on-dark-soft);
+    line-height: 1.7;
+    margin: 0 auto;
+    max-width: 620px;
+    text-wrap: pretty;
+  }
+
+  .page-hero__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1.75rem;
+  }
+</style>

@@ -1,0 +1,603 @@
+---
+/**
+ * Motion.astro — Capa de movimiento global de Omnimind
+ *
+ * Inyecta el cursor personalizado, la barra de progreso de lectura y el
+ * motor de animación (reveals, contadores, imán, spotlight, tilt, parallax
+ * y el campo neuronal de los fondos oscuros).
+ *
+ * Se monta una sola vez desde BaseLayout. Sin dependencias externas.
+ * Todo respeta `prefers-reduced-motion` y punteros gruesos (táctil).
+ */
+---
+
+<!-- Barra de progreso de lectura -->
+<div class="scroll-progress" aria-hidden="true">
+  <span class="scroll-progress__bar" data-scroll-progress></span>
+</div>
+
+<!-- Cursor personalizado (solo punteros finos) -->
+<div class="cursor" data-cursor-root aria-hidden="true">
+  <span class="cursor__ring"></span>
+  <span class="cursor__dot"></span>
+</div>
+
+<script>
+  // ═══════════════════════════════════════════════════════════
+  // OMNIMIND — Motor de movimiento
+  // ═══════════════════════════════════════════════════════════
+
+  const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const FINE_POINTER = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  /** Tareas de limpieza pendientes (se ejecutan antes de cada navegación). */
+  let cleanups: Array<() => void> = [];
+  let globalsBound = false;
+
+  // Cada arranque ejecuta primero `teardown()`, así que registrar un
+  // listener aquí garantiza que nunca se dupliquen.
+  const onCleanup = (fn: () => void) => cleanups.push(fn);
+
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+  const clamp = (v: number, min: number, max: number) =>
+    Math.min(max, Math.max(min, v));
+
+  // ───────────────────────────────────────────────────────────
+  // 1. REVEALS DE SCROLL + ESCALONADO
+  // ───────────────────────────────────────────────────────────
+  function initReveals() {
+    const items = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    if (!items.length) return;
+
+    // Escalonado: cada grupo reparte el retraso entre sus hijos revelables
+    document
+      .querySelectorAll<HTMLElement>("[data-stagger]")
+      .forEach((group) => {
+        const step = Number(group.dataset.stagger) || 90;
+        const kids = group.querySelectorAll<HTMLElement>("[data-reveal]");
+        kids.forEach((kid, i) => {
+          if (kid.style.getPropertyValue("--reveal-delay")) return;
+          kid.style.setProperty("--reveal-delay", `${i * step}ms`);
+        });
+      });
+
+    if (REDUCED.matches) {
+      items.forEach((el) => el.classList.add("is-revealed"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-revealed");
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    items.forEach((el) => {
+      // Lo que ya está en pantalla al cargar se revela de inmediato
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+        requestAnimationFrame(() => el.classList.add("is-revealed"));
+      } else {
+        io.observe(el);
+      }
+    });
+
+    onCleanup(() => io.disconnect());
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 2. CONTADORES ANIMADOS
+  // ───────────────────────────────────────────────────────────
+  function initCounters() {
+    const nodes = document.querySelectorAll<HTMLElement>("[data-count]");
+    if (!nodes.length) return;
+
+    const run = (el: HTMLElement) => {
+      const raw = el.dataset.count || el.textContent || "";
+      const match = raw.match(/^(\D*?)(\d+(?:[.,]\d+)?)(.*)$/);
+      if (!match) return;
+
+      const [, prefix, numText, suffix] = match;
+      const decimals = (numText.split(/[.,]/)[1] || "").length;
+      const target = parseFloat(numText.replace(",", "."));
+      const duration = Number(el.dataset.countDuration) || 1600;
+      const start = performance.now();
+
+      const frame = (now: number) => {
+        const t = clamp((now - start) / duration, 0, 1);
+        // easeOutExpo
+        const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        const value = (target * eased).toFixed(decimals);
+        el.textContent = `${prefix}${value}${suffix}`;
+        if (t < 1) requestAnimationFrame(frame);
+      };
+
+      el.textContent = `${prefix}${(0).toFixed(decimals)}${suffix}`;
+      requestAnimationFrame(frame);
+    };
+
+    if (REDUCED.matches) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          run(entry.target as HTMLElement);
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.6 },
+    );
+
+    nodes.forEach((el) => io.observe(el));
+    onCleanup(() => io.disconnect());
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 3. CURSOR PERSONALIZADO
+  // ───────────────────────────────────────────────────────────
+  function initCursor() {
+    if (!FINE_POINTER.matches || REDUCED.matches) return;
+
+    const root = document.querySelector<HTMLElement>("[data-cursor-root]");
+    if (!root) return;
+
+    const dot = root.querySelector<HTMLElement>(".cursor__dot");
+    const ring = root.querySelector<HTMLElement>(".cursor__ring");
+    if (!dot || !ring) return;
+
+    const HOVER_SELECTOR =
+      'a, button, [role="button"], summary, label, .service-card, .blog-card, .modulo-card, [data-cursor="hover"]';
+    const DARK_SELECTOR =
+      '.section-dark, .site-footer, .header-nav, .hero, .page-hero, .servdetail-hero, [data-cursor-theme="dark"]';
+    const NATIVE_SELECTOR =
+      'input, textarea, select, [contenteditable="true"], [data-cursor="native"]';
+
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let rx = mx;
+    let ry = my;
+    let raf = 0;
+    let lastCheck = 0;
+
+    const render = () => {
+      // El punto sigue 1:1 (no se pierde precisión); el anillo persigue.
+      rx = lerp(rx, mx, 0.18);
+      ry = lerp(ry, my, 0.18);
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+
+    const onMove = (e: MouseEvent) => {
+      mx = e.clientX;
+      my = e.clientY;
+
+      if (!document.documentElement.classList.contains("cursor-active")) {
+        document.documentElement.classList.add("cursor-active");
+      }
+      root.classList.remove("is-out");
+
+      // Contexto (interactivo / oscuro / nativo) — como máximo cada 60 ms
+      const now = performance.now();
+      if (now - lastCheck < 60) return;
+      lastCheck = now;
+
+      const target = e.target as Element | null;
+      if (!target || !target.closest) return;
+
+      root.classList.toggle("is-hover", !!target.closest(HOVER_SELECTOR));
+      root.classList.toggle("is-dark", !!target.closest(DARK_SELECTOR));
+      root.classList.toggle("is-native", !!target.closest(NATIVE_SELECTOR));
+    };
+
+    const onDown = () => root.classList.add("is-down");
+    const onUp = () => root.classList.remove("is-down");
+    const onLeave = () => root.classList.add("is-out");
+    const onEnter = () => root.classList.remove("is-out");
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
+    document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mouseenter", onEnter);
+
+    onCleanup(() => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
+      document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
+    });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 4. BOTONES IMANTADOS
+  // ───────────────────────────────────────────────────────────
+  function initMagnetic() {
+    if (!FINE_POINTER.matches || REDUCED.matches) return;
+
+    document
+      .querySelectorAll<HTMLElement>("[data-magnetic]")
+      .forEach((el) => {
+        const strength = Number(el.dataset.magnetic) || 0.28;
+        const label = el.querySelector<HTMLElement>(".btn__label");
+
+        const onMove = (e: MouseEvent) => {
+          const r = el.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width / 2);
+          const dy = e.clientY - (r.top + r.height / 2);
+          el.style.transform = `translate3d(${dx * strength}px, ${dy * strength}px, 0)`;
+          if (label) {
+            label.style.transform = `translate3d(${dx * strength * 0.35}px, ${dy * strength * 0.35}px, 0)`;
+          }
+        };
+
+        const onLeave = () => {
+          el.style.transform = "";
+          if (label) label.style.transform = "";
+        };
+
+        el.addEventListener("mousemove", onMove);
+        el.addEventListener("mouseleave", onLeave);
+        onCleanup(() => {
+          el.removeEventListener("mousemove", onMove);
+          el.removeEventListener("mouseleave", onLeave);
+        });
+      });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 5. SPOTLIGHT + TILT 3D
+  // ───────────────────────────────────────────────────────────
+  function initPointerSurfaces() {
+    if (!FINE_POINTER.matches) return;
+
+    document
+      .querySelectorAll<HTMLElement>("[data-spotlight]")
+      .forEach((el) => {
+        const onMove = (e: MouseEvent) => {
+          const r = el.getBoundingClientRect();
+          el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+          el.style.setProperty("--my", `${e.clientY - r.top}px`);
+        };
+
+        el.addEventListener("mousemove", onMove, { passive: true });
+        onCleanup(() => el.removeEventListener("mousemove", onMove));
+      });
+
+    if (REDUCED.matches) return;
+
+    document.querySelectorAll<HTMLElement>("[data-tilt]").forEach((el) => {
+      const max = Number(el.dataset.tilt) || 5;
+
+      const onMove = (e: MouseEvent) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.classList.add("is-tilting");
+        el.style.setProperty("--ry", `${px * max}deg`);
+        el.style.setProperty("--rx", `${-py * max}deg`);
+        el.style.setProperty("--lift", "-6px");
+      };
+
+      const onLeave = () => {
+        el.classList.remove("is-tilting");
+        el.style.setProperty("--rx", "0deg");
+        el.style.setProperty("--ry", "0deg");
+        el.style.setProperty("--lift", "0px");
+      };
+
+      el.addEventListener("mousemove", onMove, { passive: true });
+      el.addEventListener("mouseleave", onLeave);
+      onCleanup(() => {
+        el.removeEventListener("mousemove", onMove);
+        el.removeEventListener("mouseleave", onLeave);
+      });
+    });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 6. SCROLL: progreso, header y parallax
+  // ───────────────────────────────────────────────────────────
+  function initScroll() {
+    const bar = document.querySelector<HTMLElement>("[data-scroll-progress]");
+    const header = document.getElementById("site-header");
+    const parallax = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-parallax]"),
+    );
+
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+
+      if (bar) {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = max > 0 ? clamp(y / max, 0, 1) : 0;
+        bar.style.transform = `scaleX(${progress})`;
+      }
+
+      if (header) header.classList.toggle("is-scrolled", y > 40);
+
+      if (!REDUCED.matches) {
+        parallax.forEach((el) => {
+          const speed = Number(el.dataset.parallax) || 0.15;
+          const rect = el.getBoundingClientRect();
+          if (rect.bottom < -200 || rect.top > window.innerHeight + 200) return;
+          const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * -speed;
+          el.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+        });
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+
+    onCleanup(() => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 7. CAMPO NEURONAL (canvas de fondos oscuros)
+  //    Nodos que derivan y se enlazan al acercarse — guiño a la
+  //    identidad "neuro" de Omnimind. Reacciona al cursor.
+  // ───────────────────────────────────────────────────────────
+  function initNeuralFields() {
+    if (REDUCED.matches) return;
+
+    document
+      .querySelectorAll<HTMLCanvasElement>("canvas[data-neural]")
+      .forEach((canvas) => {
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const density = Number(canvas.dataset.neural) || 1;
+        const parent = canvas.parentElement || canvas;
+
+        type Node = { x: number; y: number; vx: number; vy: number; r: number };
+        let nodes: Node[] = [];
+        let w = 0;
+        let h = 0;
+        let dpr = 1;
+        let raf = 0;
+        let visible = true;
+        const pointer = { x: -9999, y: -9999 };
+
+        const resize = () => {
+          const rect = parent.getBoundingClientRect();
+          w = Math.max(1, rect.width);
+          h = Math.max(1, rect.height);
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.round(w * dpr);
+          canvas.height = Math.round(h * dpr);
+          canvas.style.width = `${w}px`;
+          canvas.style.height = `${h}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const count = clamp(Math.round((w * h) / 26000) * density, 14, 70);
+          nodes = Array.from({ length: count }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.22,
+            vy: (Math.random() - 0.5) * 0.22,
+            r: 1 + Math.random() * 1.6,
+          }));
+        };
+
+        const LINK_DIST = 132;
+
+        const draw = () => {
+          ctx.clearRect(0, 0, w, h);
+
+          for (const n of nodes) {
+            n.x += n.vx;
+            n.y += n.vy;
+
+            // Rebote suave en los bordes
+            if (n.x < 0 || n.x > w) n.vx *= -1;
+            if (n.y < 0 || n.y > h) n.vy *= -1;
+            n.x = clamp(n.x, 0, w);
+            n.y = clamp(n.y, 0, h);
+
+            // Atracción sutil hacia el cursor
+            const dx = pointer.x - n.x;
+            const dy = pointer.y - n.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < 34000 && d2 > 1) {
+              const f = 0.00022;
+              n.x += dx * f * 12;
+              n.y += dy * f * 12;
+            }
+          }
+
+          // Enlaces
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const a = nodes[i];
+              const b = nodes[j];
+              const dx = a.x - b.x;
+              const dy = a.y - b.y;
+              const dist = Math.hypot(dx, dy);
+              if (dist > LINK_DIST) continue;
+              const alpha = (1 - dist / LINK_DIST) * 0.35;
+              ctx.strokeStyle = `rgba(52, 171, 159, ${alpha.toFixed(3)})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+
+          // Nodos
+          for (const n of nodes) {
+            const near =
+              Math.hypot(pointer.x - n.x, pointer.y - n.y) < LINK_DIST * 1.2;
+            ctx.fillStyle = near
+              ? "rgba(140, 245, 230, 0.95)"
+              : "rgba(255, 255, 255, 0.55)";
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          raf = requestAnimationFrame(draw);
+        };
+
+        const onPointer = (e: MouseEvent) => {
+          const rect = canvas.getBoundingClientRect();
+          pointer.x = e.clientX - rect.left;
+          pointer.y = e.clientY - rect.top;
+        };
+
+        const onPointerOut = () => {
+          pointer.x = -9999;
+          pointer.y = -9999;
+        };
+
+        // Pausar cuando la sección sale de pantalla
+        const io = new IntersectionObserver((entries) => {
+          const isVisible = entries[0]?.isIntersecting ?? true;
+          if (isVisible === visible) return;
+          visible = isVisible;
+          if (visible) {
+            raf = requestAnimationFrame(draw);
+          } else {
+            cancelAnimationFrame(raf);
+          }
+        });
+
+        const ro = new ResizeObserver(resize);
+
+        resize();
+        canvas.classList.add("is-live");
+        raf = requestAnimationFrame(draw);
+        io.observe(parent);
+        ro.observe(parent);
+        window.addEventListener("mousemove", onPointer, { passive: true });
+        window.addEventListener("mouseout", onPointerOut, { passive: true });
+
+        onCleanup(() => {
+          cancelAnimationFrame(raf);
+          io.disconnect();
+          ro.disconnect();
+          window.removeEventListener("mousemove", onPointer);
+          window.removeEventListener("mouseout", onPointerOut);
+        });
+      });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // 8. PARALLAX DE HERO SEGÚN EL CURSOR
+  // ───────────────────────────────────────────────────────────
+  function initMouseParallax() {
+    if (!FINE_POINTER.matches || REDUCED.matches) return;
+
+    document
+      .querySelectorAll<HTMLElement>("[data-mouse-parallax]")
+      .forEach((scope) => {
+        const layers = Array.from(
+          scope.querySelectorAll<HTMLElement>("[data-depth]"),
+        );
+        if (!layers.length) return;
+
+        let tx = 0;
+        let ty = 0;
+        let cx = 0;
+        let cy = 0;
+        let raf = 0;
+
+        const render = () => {
+          cx = lerp(cx, tx, 0.07);
+          cy = lerp(cy, ty, 0.07);
+          layers.forEach((layer) => {
+            const depth = Number(layer.dataset.depth) || 10;
+            layer.style.transform = `translate3d(${(cx * depth).toFixed(2)}px, ${(cy * depth).toFixed(2)}px, 0)`;
+          });
+          raf = requestAnimationFrame(render);
+        };
+
+        const onMove = (e: MouseEvent) => {
+          const r = scope.getBoundingClientRect();
+          tx = (e.clientX - r.left) / r.width - 0.5;
+          ty = (e.clientY - r.top) / r.height - 0.5;
+        };
+
+        const onLeave = () => {
+          tx = 0;
+          ty = 0;
+        };
+
+        scope.addEventListener("mousemove", onMove, { passive: true });
+        scope.addEventListener("mouseleave", onLeave);
+        raf = requestAnimationFrame(render);
+
+        onCleanup(() => {
+          cancelAnimationFrame(raf);
+          scope.removeEventListener("mousemove", onMove);
+          scope.removeEventListener("mouseleave", onLeave);
+        });
+      });
+  }
+
+  // ───────────────────────────────────────────────────────────
+  // Arranque / apagado
+  // ───────────────────────────────────────────────────────────
+  function init() {
+    initReveals();
+    initCounters();
+    initCursor();
+    initMagnetic();
+    initPointerSurfaces();
+    initScroll();
+    initNeuralFields();
+    initMouseParallax();
+  }
+
+  function teardown() {
+    cleanups.forEach((fn) => {
+      try {
+        fn();
+      } catch {
+        /* noop */
+      }
+    });
+    cleanups = [];
+  }
+
+  function boot() {
+    teardown();
+    init();
+  }
+
+  if (!globalsBound) {
+    globalsBound = true;
+    // Navegación con View Transitions: limpiar antes de intercambiar el DOM
+    document.addEventListener("astro:before-swap", teardown);
+    document.addEventListener("astro:page-load", boot);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+</script>

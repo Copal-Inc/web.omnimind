@@ -114,6 +114,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* El header es sticky: los destinos de ancla deben detenerse por debajo
+   de él en lugar de quedar tapados. */
+:target,
+section[id],
+[id]:not(body) {
+  scroll-margin-top: 140px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -489,6 +497,30 @@ ol {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Salto al contenido — solo visible al navegar con teclado */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 1000;
+  transform: translate(-50%, -140%);
+  background: var(--color-brand-secondary);
+  color: var(--color-text-on-dark);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  color: var(--color-text-on-dark);
+  outline-offset: -4px;
 }
 
 /* ──────────────────────────────────────────────────────────

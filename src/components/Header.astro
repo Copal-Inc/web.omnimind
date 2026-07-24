@@ -1,4 +1,5 @@
 ---
+import { url, base } from "../lib/url";
 import { SITE_TITLE } from "../consts";
 
 interface Props {
@@ -8,21 +9,19 @@ interface Props {
 const { transparent = false } = Astro.props;
 const pathname = Astro.url.pathname;
 
-const base = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
-
 const navLinks = [
-  { href: `${base}/`, label: "Inicio" },
-  { href: `${base}/sobre-nosotros/`, label: "Sobre Omnimind" },
+  { href: url("/"), label: "Inicio" },
+  { href: url("/sobre-nosotros/"), label: "Sobre Omnimind" },
   {
-    href: `${base}/servicios/`,
+    href: url("/servicios/"),
     label: "Soluciones",
     children: [
-      { href: `${base}/servicios/empowermind/`, label: "Empowermind" },
-      { href: `${base}/servicios/wealth-mind/`, label: "Wealth & Mind" },
-      { href: `${base}/servicios/neurowise/`, label: "Neurowise" },
+      { href: url("/servicios/empowermind/"), label: "Empowermind" },
+      { href: url("/servicios/wealth-mind/"), label: "Wealth & Mind" },
+      { href: url("/servicios/neurowise/"), label: "Neurowise" },
     ],
   },
-  { href: `${base}/blog/`, label: "Blog" },
+  { href: url("/blog/"), label: "Blog" },
 ];
 
 function isActive(href: string): boolean {
@@ -41,10 +40,10 @@ function isActive(href: string): boolean {
   <!-- Barra superior: Logo -->
   <div class="header-top">
     <div class="container">
-      <a href={`${base}/`} class="logo" aria-label="Omnimind — Inicio">
+      <a href={url("/")} class="logo" aria-label="Omnimind — Inicio">
         <div class="logo__icon" aria-hidden="true">
           <img
-            src={`${base}/img/icononly_transparent_nobuffer.png`}
+            src={url("/img/icononly_transparent_nobuffer.png")}
             alt=""
             width="56"
             height="56"
@@ -127,7 +126,7 @@ function isActive(href: string): boolean {
 
       <!-- CTA principal -->
       <div class="header-cta">
-        <a href={`${base}/contacto/`} class="btn btn-accent nav-cta">
+        <a href={url("/contacto/")} class="btn btn-accent nav-cta">
           Solicitar cotización
         </a>
       </div>
@@ -175,7 +174,7 @@ function isActive(href: string): boolean {
           }
         </ul>
         <div class="mobile-nav__footer">
-          <a href={`${base}/contacto/`} class="btn btn-primary mobile-cta">
+          <a href={url("/contacto/")} class="btn btn-primary mobile-cta">
             Solicitar cotización
           </a>
         </div>
@@ -192,6 +191,13 @@ function isActive(href: string): boolean {
     z-index: 100;
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease);
+  }
+
+  /* Estado compacto: al bajar, la barra del logo se encoge para dejar
+     más superficie de lectura sin perder la marca de vista. */
+  .site-header.is-scrolled {
+    box-shadow: var(--shadow-md);
   }
 
   /* ── Barra superior con logo ── */
@@ -199,6 +205,11 @@ function isActive(href: string): boolean {
     padding-block: 1rem;
     border-bottom: 1px solid var(--color-border);
     background: #f1f4f4;
+    transition: padding-block var(--dur-3, 0.45s) var(--ease-out-quart, ease);
+  }
+
+  .site-header.is-scrolled .header-top {
+    padding-block: 0.45rem;
   }
 
   .logo {
@@ -212,6 +223,12 @@ function isActive(href: string): boolean {
   .logo__icon {
     flex-shrink: 0;
     line-height: 1;
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  /* El isotipo gira levemente al pasar el cursor — guiño vivo, no ruido */
+  .logo:hover .logo__icon {
+    transform: rotate(-8deg) scale(1.06);
   }
 
   .logo__text {
@@ -233,6 +250,30 @@ function isActive(href: string): boolean {
     width: 56px;
     height: 56px;
     object-fit: contain;
+    transition:
+      width var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      height var(--dur-3, 0.45s) var(--ease-out-quart, ease);
+  }
+
+  .site-header.is-scrolled .logo__img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo__name {
+    transition: font-size var(--dur-3, 0.45s) var(--ease-out-quart, ease);
+  }
+
+  .site-header.is-scrolled .logo__name {
+    font-size: var(--text-xl);
+  }
+
+  .site-header.is-scrolled .logo__tagline {
+    opacity: 0;
+  }
+
+  .logo__tagline {
+    transition: opacity var(--dur-2, 0.28s) var(--ease-out-quart, ease);
   }
 
   .logo__tagline {
@@ -273,6 +314,7 @@ function isActive(href: string): boolean {
   }
 
   .nav-link {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.3rem;
@@ -283,18 +325,15 @@ function isActive(href: string): boolean {
     font-weight: 500;
     letter-spacing: 0.02em;
     text-decoration: none;
-    border-bottom: 3px solid transparent;
     transition:
-      color var(--transition-base),
-      border-color var(--transition-base),
-      background-color var(--transition-base);
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      background-color var(--dur-2, 0.28s) var(--ease-out-quart, ease);
     white-space: nowrap;
   }
 
   .nav-link--btn {
     background: none;
     border: none;
-    border-bottom: 3px solid transparent;
     cursor: pointer;
     font-family: var(--font-heading);
     font-size: var(--text-sm);
@@ -303,16 +342,35 @@ function isActive(href: string): boolean {
     padding: 0.9rem 1rem;
   }
 
+  /* Subrayado que crece desde el centro */
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0;
+    height: 3px;
+    background: var(--color-accent);
+    border-radius: 3px 3px 0 0;
+    transform: scaleX(0);
+    transform-origin: 50% 100%;
+    transition: transform var(--dur-2, 0.28s) var(--ease-out-back, ease);
+  }
+
   .nav-link:hover,
-  .nav-link--btn:hover,
-  .nav-link.active,
-  .nav-link--btn.active {
+  .nav-link.active {
     color: #ffffff;
-    border-bottom-color: var(--color-accent);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after,
+  .nav-item--dropdown:focus-within .nav-link::after {
+    transform: scaleX(1);
   }
 
   .nav-chevron {
-    transition: transform var(--transition-base);
+    transition: transform var(--dur-2, 0.28s) var(--ease-out-back, ease);
   }
 
   /* ── Dropdown ── */
@@ -321,11 +379,10 @@ function isActive(href: string): boolean {
   }
 
   .dropdown {
-    display: none;
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 200px;
+    min-width: 210px;
     background: var(--color-surface);
     border-radius: 0 0 var(--radius-md) var(--radius-md);
     box-shadow: var(--shadow-lg);
@@ -334,11 +391,53 @@ function isActive(href: string): boolean {
     margin: 0;
     border-top: 3px solid var(--color-accent);
     z-index: 200;
+
+    /* Entrada con desplazamiento y recorte, en vez de aparecer de golpe */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transform-origin: top center;
+    pointer-events: none;
+    transition:
+      opacity var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-expo, ease),
+      visibility 0s linear var(--dur-3, 0.45s);
   }
 
   .nav-item--dropdown:hover .dropdown,
   .nav-item--dropdown:focus-within .dropdown {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  /* Los enlaces del submenú entran escalonados */
+  .dropdown__item {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  .nav-item--dropdown:hover .dropdown__item,
+  .nav-item--dropdown:focus-within .dropdown__item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dropdown__item:nth-child(1) {
+    transition-delay: 40ms;
+  }
+
+  .dropdown__item:nth-child(2) {
+    transition-delay: 90ms;
+  }
+
+  .dropdown__item:nth-child(3) {
+    transition-delay: 140ms;
   }
 
   .nav-item--dropdown:hover .nav-chevron,
@@ -347,6 +446,7 @@ function isActive(href: string): boolean {
   }
 
   .dropdown__link {
+    position: relative;
     display: block;
     padding: 0.6rem 1.25rem;
     color: var(--color-text);
@@ -355,14 +455,35 @@ function isActive(href: string): boolean {
     font-weight: 500;
     text-decoration: none;
     transition:
-      background-color var(--transition-base),
-      color var(--transition-base);
+      background-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      padding-left var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  /* Marca de acento que se despliega a la izquierda */
+  .dropdown__link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 3px;
+    height: 0;
+    background: var(--color-accent);
+    border-radius: 0 2px 2px 0;
+    transform: translateY(-50%);
+    transition: height var(--dur-2, 0.28s) var(--ease-out-back, ease);
   }
 
   .dropdown__link:hover,
   .dropdown__link.active {
     background-color: var(--color-surface-muted);
     color: var(--color-brand-primary);
+    padding-left: 1.5rem;
+  }
+
+  .dropdown__link:hover::before,
+  .dropdown__link.active::before {
+    height: 60%;
   }
 
   /* ── CTA nav ── */
@@ -390,9 +511,18 @@ function isActive(href: string): boolean {
     height: 2px;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 2px;
+    transform-origin: center;
     transition:
-      transform var(--transition-base),
-      opacity var(--transition-base);
+      transform var(--dur-3, 0.45s) var(--ease-out-back, ease),
+      opacity var(--dur-1, 0.16s) var(--ease-out-quart, ease),
+      background-color var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  /* Solo con puntero real: en táctil el :hover se queda "pegado" tras el tap */
+  @media (hover: hover) {
+    .hamburger:hover .hamburger__line {
+      background: var(--color-accent);
+    }
   }
 
   /* Hamburger state: open */
@@ -408,20 +538,64 @@ function isActive(href: string): boolean {
 
   /* ── Menú móvil ── */
   .mobile-menu {
-    display: none;
+    display: grid;
+    grid-template-rows: 0fr;
     background: var(--color-brand-secondary);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows var(--dur-3, 0.45s) var(--ease-out-expo, ease),
+      opacity var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      visibility 0s linear var(--dur-3, 0.45s);
+  }
+
+  .mobile-menu > :global(.container) {
+    overflow: hidden;
+    min-height: 0;
   }
 
   .mobile-menu[aria-hidden="false"] {
-    display: block;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transition-delay: 0s;
   }
 
   .mobile-nav-list {
     list-style: none;
     margin: 0;
     padding: 0.75rem 0;
+  }
+
+  /* Los enlaces caen escalonados al abrir */
+  .mobile-nav-list > li {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-expo, ease);
+  }
+
+  .mobile-menu[aria-hidden="false"] .mobile-nav-list > li {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mobile-menu[aria-hidden="false"] .mobile-nav-list > li:nth-child(1) {
+    transition-delay: 80ms;
+  }
+
+  .mobile-menu[aria-hidden="false"] .mobile-nav-list > li:nth-child(2) {
+    transition-delay: 130ms;
+  }
+
+  .mobile-menu[aria-hidden="false"] .mobile-nav-list > li:nth-child(3) {
+    transition-delay: 180ms;
+  }
+
+  .mobile-menu[aria-hidden="false"] .mobile-nav-list > li:nth-child(4) {
+    transition-delay: 230ms;
   }
 
   .mobile-nav-link {
@@ -438,6 +612,17 @@ function isActive(href: string): boolean {
   .mobile-nav-link:hover,
   .mobile-nav-link.active {
     color: var(--color-accent);
+    transform: translateX(4px);
+  }
+
+  .mobile-nav-link {
+    transition:
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  .mobile-nav__footer {
+    padding-bottom: 1.5rem;
   }
 
   .mobile-sub-list {
@@ -479,23 +664,45 @@ function isActive(href: string): boolean {
 </style>
 
 <script>
-  // Menú hamburguesa (CSS puro + JS mínimo para accesibilidad)
-  const btn = document.getElementById("hamburger-btn");
-  const menu = document.getElementById("mobile-menu");
+  // Menú hamburguesa — se re-enlaza en cada navegación porque el DOM
+  // se reemplaza al usar View Transitions.
+  function setMenuOpen(open: boolean) {
+    const btn = document.getElementById("hamburger-btn");
+    const menu = document.getElementById("mobile-menu");
+    if (!btn || !menu) return;
+    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+    menu.setAttribute("aria-hidden", String(!open));
+  }
 
-  if (btn && menu) {
+  function initHeader() {
+    const btn = document.getElementById("hamburger-btn");
+    if (!btn || btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+
     btn.addEventListener("click", () => {
-      const isOpen = btn.getAttribute("aria-expanded") === "true";
-      btn.setAttribute("aria-expanded", String(!isOpen));
-      menu.setAttribute("aria-hidden", String(isOpen));
+      setMenuOpen(btn.getAttribute("aria-expanded") !== "true");
     });
   }
 
-  // Cerrar menú al cambiar de tamaño a desktop
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 900 && btn && menu) {
-      btn.setAttribute("aria-expanded", "false");
-      menu.setAttribute("aria-hidden", "true");
+  // Listeners globales: una sola vez por sesión (sobreviven a la navegación)
+  document.addEventListener("keydown", (e) => {
+    const btn = document.getElementById("hamburger-btn");
+    if (e.key === "Escape" && btn?.getAttribute("aria-expanded") === "true") {
+      setMenuOpen(false);
+      btn.focus();
     }
   });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) setMenuOpen(false);
+  });
+
+  document.addEventListener("astro:page-load", initHeader);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHeader, { once: true });
+  } else {
+    initHeader();
+  }
 </script>

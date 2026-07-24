@@ -1,4 +1,6 @@
 ---
+import { url } from '../lib/url';
+import PageHero from '../components/PageHero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -8,23 +10,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 >
 
   <!-- HERO -->
-  <section class="page-hero section-dark" aria-label="Contacto">
-    <div class="container page-hero__inner">
-      <span class="section-heading__eyebrow">Hablemos</span>
-      <h1 class="page-hero__title">¿Cómo podemos ayudarte?</h1>
-      <p class="page-hero__lead">
-        Cuéntanos el reto que enfrenta tu organización y diseñamos una
-        propuesta a la medida.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Hablemos"
+    title="¿Cómo podemos ayudarte?"
+    lead="Cuéntanos el reto que enfrenta tu organización y diseñamos una propuesta a la medida."
+    label="Contacto"
+  />
 
   <!-- FORMULARIO + INFO -->
   <section class="section" aria-labelledby="contacto-form-heading">
     <div class="container contacto-grid">
 
       <!-- FORMULARIO -->
-      <div class="contacto-form-wrap">
+      <div class="contacto-form-wrap" data-reveal="up">
         <h2 id="contacto-form-heading" class="contacto-form-wrap__title">
           Solicita tu cotización
         </h2>
@@ -140,13 +138,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               />
               <span>
                 He leído y acepto el
-                <a href="/aviso-de-privacidad/" target="_blank" rel="noopener">aviso de privacidad</a>.
+                <a href={url("/aviso-de-privacidad/")} target="_blank" rel="noopener">aviso de privacidad</a>.
               </span>
             </label>
           </div>
 
-          <button type="submit" class="btn btn-primary contacto-form__submit" id="contacto-submit">
-            Enviar solicitud
+          <button type="submit" class="btn btn-primary contacto-form__submit" id="contacto-submit" data-magnetic="0.16">
+            <span class="btn__label">Enviar solicitud</span>
           </button>
 
           <p class="form-note">
@@ -156,7 +154,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
 
       <!-- INFO DE CONTACTO -->
-      <aside class="contacto-info" aria-label="Información de contacto">
+      <aside class="contacto-info" aria-label="Información de contacto" data-reveal="right" data-spotlight>
         <h2 class="contacto-info__title">También puedes encontrarnos en:</h2>
 
         <ul class="contacto-info__list" role="list">
@@ -218,15 +216,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-  .page-hero { padding-block: 4rem 3.5rem; }
-  .page-hero__inner { text-align: center; max-width: 680px; margin-inline: auto; }
-  .page-hero__title {
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
-    color: var(--color-text-on-dark);
-    margin-block: 0.75rem 1.25rem;
-  }
-  .page-hero__lead { font-size: var(--text-lg); color: var(--color-text-on-dark-soft); line-height: 1.7; margin: 0; }
-
   /* ── GRID CONTACTO ── */
   .contacto-grid {
     display: grid;
@@ -275,14 +264,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-size: var(--text-base);
     color: var(--color-text);
     background: var(--color-surface);
-    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    transition:
+      border-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      box-shadow var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-2, 0.28s) var(--ease-out-quart, ease);
     outline: none;
     appearance: none;
   }
 
   .form-input:focus {
-    border-color: var(--color-brand-primary);
-    box-shadow: 0 0 0 3px rgba(42, 76, 144, 0.12);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(52, 171, 159, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .form-input:hover:not(:focus) {
+    border-color: var(--color-border-strong);
+  }
+
+  /* La etiqueta acompaña al campo enfocado */
+  .form-group:focus-within .form-label {
+    color: var(--color-accent-dark);
+  }
+
+  .form-label {
+    transition: color var(--dur-2, 0.28s) var(--ease-out-quart, ease);
   }
 
   .form-input::placeholder { color: var(--color-border-strong); }
@@ -345,7 +351,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     gap: 0.75rem;
   }
 
-  .contacto-info__icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .contacto-info__icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .contacto-info__item {
+    transition: transform var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  .contacto-info__item:hover {
+    transform: translateX(4px);
+  }
+
+  .contacto-info__item:hover .contacto-info__icon {
+    transform: scale(1.25) rotate(-8deg);
+  }
 
   .contacto-info__item strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.1rem; }
   .contacto-info__item a,

@@ -1,32 +1,32 @@
 ---
+import { url } from '../lib/url';
 const year = new Date().getFullYear();
-const base = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const solutions = [
-  { href: `${base}/servicios/empowermind/`, label: 'Empowermind' },
-  { href: `${base}/servicios/wealth-mind/`, label: 'Wealth & Mind' },
-  { href: `${base}/servicios/neurowise/`, label: 'Neurowise' },
+  { href: url('/servicios/empowermind/'), label: 'Empowermind' },
+  { href: url('/servicios/wealth-mind/'), label: 'Wealth & Mind' },
+  { href: url('/servicios/neurowise/'), label: 'Neurowise' },
 ];
 
 const company = [
-  { href: `${base}/sobre-nosotros/`, label: 'Sobre Omnimind' },
-  { href: `${base}/blog/`, label: 'Blog' },
-  { href: `${base}/contacto/`, label: 'Contacto' },
-  { href: `${base}/aviso-de-privacidad/`, label: 'Aviso de privacidad' },
+  { href: url('/sobre-nosotros/'), label: 'Sobre Omnimind' },
+  { href: url('/blog/'), label: 'Blog' },
+  { href: url('/contacto/'), label: 'Contacto' },
+  { href: url('/aviso-de-privacidad/'), label: 'Aviso de privacidad' },
 ];
 ---
 
 <footer class="site-footer">
-  <div class="container footer__grid">
+  <div class="container footer__grid" data-stagger="120">
 
     <!-- Columna 1: Logo + tagline + redes -->
-    <div class="footer__brand">
-      <a href={`${base}/`} class="footer__logo" aria-label="Omnimind — Inicio">
+    <div class="footer__brand" data-reveal="up">
+      <a href={url('/')} class="footer__logo" aria-label="Omnimind — Inicio">
         <div class="footer__logo-icon" aria-hidden="true">
-          <img src={`${base}/img/icononly_transparent_nobuffer.png`} alt="" width="48" height="48" loading="lazy" />
+          <img src={url('/img/icononly_transparent_nobuffer.png')} alt="" width="48" height="48" loading="lazy" />
         </div>
         <img
-          src={`${base}/img/fulllogo_transparent.png`}
+          src={url('/img/fulllogo_transparent.png')}
           alt="Omnimind — A healthy mind is a prosper mind"
           width="180"
           height="90"
@@ -74,7 +74,7 @@ const company = [
     </div>
 
     <!-- Columna 2: Soluciones -->
-    <nav class="footer__nav" aria-label="Soluciones">
+    <nav class="footer__nav" aria-label="Soluciones" data-reveal="up">
       <h3 class="footer__nav-title">Soluciones</h3>
       <ul class="footer__nav-list" role="list">
         {solutions.map((link) => (
@@ -86,7 +86,7 @@ const company = [
     </nav>
 
     <!-- Columna 3: Empresa -->
-    <nav class="footer__nav" aria-label="Empresa">
+    <nav class="footer__nav" aria-label="Empresa" data-reveal="up">
       <h3 class="footer__nav-title">Empresa</h3>
       <ul class="footer__nav-list" role="list">
         {company.map((link) => (
@@ -98,7 +98,7 @@ const company = [
     </nav>
 
     <!-- Columna 4: Contacto -->
-    <div class="footer__contact">
+    <div class="footer__contact" data-reveal="up">
       <h3 class="footer__nav-title">Contacto</h3>
       <p class="footer__contact-item">
         <a href="mailto:info@omnimindcourses.com" class="footer__nav-link">
@@ -106,8 +106,8 @@ const company = [
         </a>
       </p>
       <div class="footer__cta">
-        <a href="/contacto/" class="btn btn-accent footer__cta-btn">
-          Solicitar cotización
+        <a href={url("/contacto/")} class="btn btn-accent footer__cta-btn" data-magnetic="0.16">
+          <span class="btn__label">Solicitar cotización</span>
         </a>
       </div>
     </div>
@@ -173,6 +173,14 @@ const company = [
     opacity: 1;
   }
 
+  .footer__logo-icon {
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .footer__logo:hover .footer__logo-icon {
+    transform: rotate(-8deg) scale(1.08);
+  }
+
   .footer__tagline {
     font-style: italic;
     font-size: var(--text-sm);
@@ -206,17 +214,22 @@ const company = [
     color: var(--color-text-on-dark);
     text-decoration: none;
     transition:
-      background-color var(--transition-base),
-      color var(--transition-base);
+      background-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-back, ease),
+      box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease);
   }
 
   .footer__social-link:hover {
     background: var(--color-accent);
     color: #fff;
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: var(--glow-accent, 0 10px 24px -10px rgba(52, 171, 159, 0.6));
   }
 
   /* ── Nav columnas ── */
   .footer__nav-title {
+    position: relative;
     font-family: var(--font-heading);
     font-size: var(--text-sm);
     font-weight: 700;
@@ -224,6 +237,24 @@ const company = [
     text-transform: uppercase;
     color: var(--color-accent);
     margin: 0 0 1.25rem 0;
+    padding-bottom: 0.6rem;
+  }
+
+  .footer__nav-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 28px;
+    height: 2px;
+    background: var(--color-accent);
+    opacity: 0.6;
+    transform-origin: 0 50%;
+    transition: width var(--dur-4, 0.75s) var(--ease-out-expo, ease);
+  }
+
+  :global([data-reveal].is-revealed) .footer__nav-title::after {
+    width: 44px;
   }
 
   .footer__nav-list {
@@ -236,14 +267,37 @@ const company = [
   }
 
   .footer__nav-link {
+    position: relative;
+    display: inline-block;
     color: var(--color-text-on-dark-soft);
     font-size: var(--text-sm);
     text-decoration: none;
-    transition: color var(--transition-base);
+    transition:
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  .footer__nav-link::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    width: 8px;
+    height: 1.5px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+    transition: transform var(--dur-2, 0.28s) var(--ease-out-quart, ease);
   }
 
   .footer__nav-link:hover {
     color: var(--color-text-on-dark);
+    transform: translateX(6px);
+  }
+
+  .footer__nav-link:hover::before {
+    transform: scaleX(1);
+    transform-origin: 0 50%;
   }
 
   /* ── Contacto ── */

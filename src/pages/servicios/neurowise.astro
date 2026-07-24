@@ -1,4 +1,7 @@
 ---
+import { url } from '../../lib/url';
+import NeuralField from '../../components/NeuralField.astro';
+import PageHero from '../../components/PageHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
@@ -8,38 +11,38 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 >
 
   <!-- HERO -->
-  <section class="servdetail-hero section-dark" aria-label="Neurowise">
-    <div class="container servdetail-hero__inner">
-      <span class="section-heading__eyebrow">Línea de intervención 02</span>
-      <h1 class="servdetail-hero__title">Neurowise</h1>
-      <p class="servdetail-hero__lead">
-        Consultoría e intervenciones basadas en el estado del arte de la
-        investigación en neurociencias para mejorar la productividad de tu equipo.
-      </p>
-      <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Línea de intervención 02"
+    title="Neurowise"
+    lead="Consultoría e intervenciones basadas en el estado del arte de la investigación en neurociencias para mejorar la productividad de tu equipo."
+    label="Neurowise"
+    size="lg"
+  >
+    <a href={url("/contacto/")} class="btn btn-accent" data-magnetic="0.2">
+      <span class="btn__label">Solicitar cotización</span>
+    </a>
+  </PageHero>
 
   <!-- QUÉ ES -->
   <section class="section" aria-labelledby="que-es-neurowise">
     <div class="container servdetail-intro">
-      <div class="servdetail-intro__text">
-        <span class="section-heading__eyebrow">¿Qué es?</span>
-        <h2 id="que-es-neurowise">Ciencia aplicada a la productividad</h2>
-        <p>
+      <div class="servdetail-intro__text" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="right">¿Qué es?</span>
+        <h2 id="que-es-neurowise" data-reveal="right">Ciencia aplicada a la productividad</h2>
+        <p data-reveal="right">
           Neurowise aplica los avances más recientes en neurociencias para
           entender cómo funciona el cerebro en entornos laborales y diseñar
           intervenciones que mejoren el desempeño, la toma de decisiones y
           la resiliencia cognitiva.
         </p>
-        <p>
+        <p data-reveal="right">
           No es magia ni motivación superficial: es ciencia. Diagnósticamos el
           estado cognitivo del equipo y co-construimos un programa de
           intervención con resultados medibles.
         </p>
       </div>
-      <div class="servdetail-intro__media">
-        <div class="img-placeholder" aria-label="Imagen Neurowise — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
+      <div class="servdetail-intro__media" data-reveal="left">
+        <div class="img-placeholder" data-spotlight aria-label="Imagen Neurowise — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
           🧠 Taller Neurowise<br />(pendiente imagen aprobada)
         </div>
       </div>
@@ -49,31 +52,31 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- MÓDULOS -->
   <section class="section section-muted" aria-labelledby="modulos-neurowise">
     <div class="container">
-      <div class="section-heading">
-        <span class="section-heading__eyebrow">Lo que incluye</span>
-        <h2 class="section-heading__title" id="modulos-neurowise">Módulos y talleres</h2>
-        <p class="section-heading__body">
+      <div class="section-heading" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="up">Lo que incluye</span>
+        <h2 class="section-heading__title" id="modulos-neurowise" data-reveal="up">Módulos y talleres</h2>
+        <p class="section-heading__body" data-reveal="up">
           Programas adaptables en duración y formato para organizaciones de
           todos los tamaños.
         </p>
       </div>
-      <ul class="modulos-grid" role="list">
-        <li class="modulo-card">
+      <ul class="modulos-grid" role="list" data-stagger="100">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🔄</span>
           <h3 class="modulo-card__title">Flexibilidad cognitiva</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🎯</span>
           <h3 class="modulo-card__title">Atención y enfoque</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">💡</span>
           <h3 class="modulo-card__title">Creatividad e innovación</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🛡️</span>
           <h3 class="modulo-card__title">Resiliencia y gestión del estrés</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
@@ -84,12 +87,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   <!-- CTA -->
   <section class="section section-dark" aria-labelledby="cta-nw-heading">
-    <div class="container cta-simple">
-      <h2 id="cta-nw-heading">¿Quieres aplicar neurociencias en tu empresa?</h2>
+    <NeuralField density={0.6} />
+    <div class="container cta-simple" data-stagger="110">
+      <h2 id="cta-nw-heading" data-reveal="up">¿Quieres aplicar neurociencias en tu empresa?</h2>
       <p>Diseñamos un diagnóstico inicial sin costo para identificar oportunidades.</p>
-      <div class="cta-actions">
-        <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
-        <a href="/servicios/" class="btn btn-outline">Ver todas las soluciones</a>
+      <div class="cta-actions" data-reveal="up">
+        <a href={url("/contacto/")} class="btn btn-accent">Solicitar cotización</a>
+        <a href={url("/servicios/")} class="btn btn-outline">Ver todas las soluciones</a>
       </div>
     </div>
   </section>

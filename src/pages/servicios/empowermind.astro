@@ -1,4 +1,7 @@
 ---
+import { url } from '../../lib/url';
+import NeuralField from '../../components/NeuralField.astro';
+import PageHero from '../../components/PageHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
@@ -8,39 +11,39 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 >
 
   <!-- HERO -->
-  <section class="servdetail-hero section-dark" aria-label="Empowermind">
-    <div class="container servdetail-hero__inner">
-      <span class="section-heading__eyebrow">Línea de intervención 01</span>
-      <h1 class="servdetail-hero__title">Empowermind</h1>
-      <p class="servdetail-hero__lead">
-        Creamos ambientes y habilidades laborales que benefician la
-        productividad y el desarrollo de los individuos en los equipos de trabajo.
-      </p>
-      <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Línea de intervención 01"
+    title="Empowermind"
+    lead="Creamos ambientes y habilidades laborales que benefician la productividad y el desarrollo de los individuos en los equipos de trabajo."
+    label="Empowermind"
+    size="lg"
+  >
+    <a href={url("/contacto/")} class="btn btn-accent" data-magnetic="0.2">
+      <span class="btn__label">Solicitar cotización</span>
+    </a>
+  </PageHero>
 
   <!-- QUÉ ES -->
   <section class="section" aria-labelledby="que-es-empowermind">
     <div class="container servdetail-intro">
-      <div class="servdetail-intro__text">
-        <span class="section-heading__eyebrow">¿Qué es?</span>
-        <h2 id="que-es-empowermind">Potencia a tu equipo desde adentro</h2>
-        <p>
+      <div class="servdetail-intro__text" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="right">¿Qué es?</span>
+        <h2 id="que-es-empowermind" data-reveal="right">Potencia a tu equipo desde adentro</h2>
+        <p data-reveal="right">
           Empowermind es nuestra línea de intervención enfocada en el
           desarrollo de habilidades organizacionales y liderazgo. A través
           de talleres experienciales y metodologías probadas, ayudamos a los
           equipos a mejorar su comunicación, organización y rendimiento
           colectivo.
         </p>
-        <p>
+        <p data-reveal="right">
           Cada programa se diseña a la medida de la organización: analizamos
           el contexto, identificamos las áreas de oportunidad y co-creamos un
           plan de intervención que genera cambios reales y medibles.
         </p>
       </div>
-      <div class="servdetail-intro__media">
-        <div class="img-placeholder" aria-label="Imagen Empowermind — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
+      <div class="servdetail-intro__media" data-reveal="left">
+        <div class="img-placeholder" data-spotlight aria-label="Imagen Empowermind — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
           🧑‍💼 Taller Empowermind<br />(pendiente imagen aprobada)
         </div>
       </div>
@@ -50,31 +53,31 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- MÓDULOS -->
   <section class="section section-muted" aria-labelledby="modulos-empowermind">
     <div class="container">
-      <div class="section-heading">
-        <span class="section-heading__eyebrow">Lo que incluye</span>
-        <h2 class="section-heading__title" id="modulos-empowermind">Módulos y talleres</h2>
-        <p class="section-heading__body">
+      <div class="section-heading" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="up">Lo que incluye</span>
+        <h2 class="section-heading__title" id="modulos-empowermind" data-reveal="up">Módulos y talleres</h2>
+        <p class="section-heading__body" data-reveal="up">
           Todos nuestros módulos son adaptables en duración y formato
           (presencial, híbrido o en línea).
         </p>
       </div>
-      <ul class="modulos-grid" role="list">
-        <li class="modulo-card">
+      <ul class="modulos-grid" role="list" data-stagger="100">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🎯</span>
           <h3 class="modulo-card__title">Liderazgo consciente</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">💬</span>
           <h3 class="modulo-card__title">Comunicación efectiva</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">⚡</span>
           <h3 class="modulo-card__title">Gestión del tiempo y energía</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🤝</span>
           <h3 class="modulo-card__title">Trabajo en equipo</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
@@ -85,12 +88,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   <!-- CTA -->
   <section class="section section-dark" aria-labelledby="cta-emp-heading">
-    <div class="container cta-simple">
-      <h2 id="cta-emp-heading">¿Listo para empoderar a tu equipo?</h2>
-      <p>Cuéntanos el reto de tu organización y diseñamos el programa ideal.</p>
-      <div class="cta-actions">
-        <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
-        <a href="/servicios/" class="btn btn-outline">Ver todas las soluciones</a>
+    <NeuralField density={0.6} />
+    <div class="container cta-simple" data-stagger="110">
+      <h2 id="cta-emp-heading" data-reveal="up">¿Listo para empoderar a tu equipo?</h2>
+      <p data-reveal="up">Cuéntanos el reto de tu organización y diseñamos el programa ideal.</p>
+      <div class="cta-actions" data-reveal="up">
+        <a href={url("/contacto/")} class="btn btn-accent">Solicitar cotización</a>
+        <a href={url("/servicios/")} class="btn btn-outline">Ver todas las soluciones</a>
       </div>
     </div>
   </section>
@@ -98,33 +102,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-  .servdetail-hero {
-    padding-block: 4.5rem 4rem;
-  }
-
-  .servdetail-hero__inner {
-    max-width: 720px;
-    text-align: center;
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
-  }
-
-  .servdetail-hero__title {
-    font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
-    color: var(--color-text-on-dark);
-    margin: 0;
-  }
-
-  .servdetail-hero__lead {
-    font-size: var(--text-lg);
-    color: var(--color-text-on-dark-soft);
-    margin: 0;
-    max-width: 600px;
-  }
-
   .servdetail-intro {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -156,15 +133,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     border-radius: var(--radius-lg);
     padding: 1.75rem;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-slow), transform var(--transition-slow);
+    /* El desplazamiento lo aporta data-tilt (--lift) */
+    transition:
+      box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      border-color var(--dur-3, 0.45s) var(--ease-out-quart, ease);
   }
 
   .modulo-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(52, 171, 159, 0.45);
   }
 
-  .modulo-card__icon { font-size: 2rem; display: block; margin-bottom: 0.75rem; }
+  .modulo-card__icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.75rem;
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .modulo-card:hover .modulo-card__icon {
+    transform: scale(1.2) rotate(-8deg);
+  }
   .modulo-card__title { font-size: var(--text-xl); margin-bottom: 0.5rem; }
   .modulo-card__body { color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.6; margin: 0; }
 

@@ -100,3 +100,60 @@ como `.docx` con la marca Copal: `python3 docs/generar_docx.py` → `docs/salida
 - El CMS demo (`/cms-demo/`) simula el flujo completo de creación de artículos sin backend. Cuando el sitio esté desplegado, se usará `/admin/` con Decap CMS conectado a GitHub.
 - Los artículos del blog se almacenan como archivos `.md` en `src/content/blog/` y se validan con el schema definido en `content.config.ts`.
 - El formulario de contacto está maquetado pero no tiene backend conectado aún.
+
+---
+
+## ✨ Sistema de movimiento
+
+Toda la animación vive en `src/styles/motion.css` (tokens y estilos) y
+`src/components/Motion.astro` (motor JS, sin dependencias). El componente
+`Motion` se monta una sola vez desde `BaseLayout`.
+
+**Interruptor global:** un script inline en `BaseHead` pone
+`<html data-motion="on|off">` antes del primer pintado. Con
+`prefers-reduced-motion: reduce`, o sin JS, vale `off` y el sitio queda
+completamente estático y legible — ningún contenido depende de la animación
+para mostrarse.
+
+### Ganchos disponibles (atributos `data-*`)
+
+| Atributo | Qué hace |
+|---|---|
+| `data-reveal="up\|down\|left\|right\|scale\|blur\|mask"` | Aparece al entrar en pantalla (IntersectionObserver) |
+| `data-stagger="120"` | En un contenedor: escalona a sus hijos `data-reveal` cada N ms |
+| `data-enter` + `--enter-delay` | Entrada inmediata al cargar (heros), sin esperar scroll |
+| `data-count="+50"` | Cuenta desde 0 al entrar en pantalla, respetando prefijo y sufijo |
+| `data-spotlight` / `data-spotlight="dark"` | Halo teal que sigue al cursor dentro del elemento |
+| `data-tilt="4"` | Inclinación 3D suave hacia el cursor (grados máximos) |
+| `data-magnetic="0.2"` | Botón imantado: se acerca al cursor (envolver el texto en `.btn__label`) |
+| `data-parallax="0.15"` | Desplazamiento vertical según el scroll |
+| `data-mouse-parallax` + `data-depth="20"` | Capas con profundidad que reaccionan al cursor |
+| `.card-hover` + `.card-media` | Zoom de la imagen al pasar el cursor por la tarjeta |
+
+### Componentes de apoyo
+
+- **`NeuralField.astro`** — fondo de secciones oscuras: auroras de color en CSS
+  + red neuronal en canvas que reacciona al cursor. El padre necesita
+  `position: relative` (las `.section-dark` ya lo traen).
+- **`PageHero.astro`** — encabezado unificado de páginas internas, con campo
+  neuronal y entrada escalonada del texto.
+
+### Cursor personalizado
+
+Punto teal que sigue 1:1 (no se pierde precisión) más un anillo con inercia
+que se expande sobre elementos interactivos. Solo se activa en punteros finos
+y se desactiva sobre campos de formulario. Para volver al cursor del sistema,
+basta con eliminar el bloque `html.cursor-active { cursor: none }` de
+`motion.css`.
+
+### Navegación
+
+`ClientRouter` (View Transitions de Astro) funde el cambio de página en lugar
+de parpadear en blanco. Cualquier script que enlace listeners debe hacerlo en
+`astro:page-load`, no solo en `DOMContentLoaded`.
+
+### Rutas
+
+El sitio se sirve bajo un subdirectorio (`base: '/web.omnimind'`), así que los
+enlaces internos deben escribirse con el helper `src/lib/url.ts`:
+`<a href={url('/contacto/')}>` — nunca `href="/contacto/"`.

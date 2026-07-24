@@ -1,4 +1,7 @@
 ---
+import { url } from '../../lib/url';
+import NeuralField from '../../components/NeuralField.astro';
+import PageHero from '../../components/PageHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
@@ -8,38 +11,38 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 >
 
   <!-- HERO -->
-  <section class="servdetail-hero section-dark" aria-label="Wealth & Mind">
-    <div class="container servdetail-hero__inner">
-      <span class="section-heading__eyebrow">Línea de intervención 03</span>
-      <h1 class="servdetail-hero__title">Wealth &amp; Mind</h1>
-      <p class="servdetail-hero__lead">
-        Ponemos la salud mental al frente. Intervenciones para prevenir
-        riesgos psicosociales y crear ambientes saludables en empresas o comunidades.
-      </p>
-      <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Línea de intervención 03"
+    title="Wealth &amp; Mind"
+    lead="Ponemos la salud mental al frente. Intervenciones para prevenir riesgos psicosociales y crear ambientes saludables en empresas o comunidades."
+    label="Wealth & Mind"
+    size="lg"
+  >
+    <a href={url("/contacto/")} class="btn btn-accent" data-magnetic="0.2">
+      <span class="btn__label">Solicitar cotización</span>
+    </a>
+  </PageHero>
 
   <!-- QUÉ ES -->
   <section class="section" aria-labelledby="que-es-wealth">
     <div class="container servdetail-intro">
-      <div class="servdetail-intro__text">
-        <span class="section-heading__eyebrow">¿Qué es?</span>
-        <h2 id="que-es-wealth">Salud mental como ventaja competitiva</h2>
-        <p>
+      <div class="servdetail-intro__text" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="right">¿Qué es?</span>
+        <h2 id="que-es-wealth" data-reveal="right">Salud mental como ventaja competitiva</h2>
+        <p data-reveal="right">
           Wealth &amp; Mind es nuestra línea dedicada al bienestar psicológico.
           Diseñamos programas para prevenir el burnout, gestionar el estrés
           laboral y cumplir con normativas como la NOM-035 de forma genuina,
           no solo en papel.
         </p>
-        <p>
+        <p data-reveal="right">
           Una organización saludable es más productiva, retiene mejor el
           talento y genera un impacto positivo en las personas que la forman.
           Nosotros te ayudamos a llegar ahí.
         </p>
       </div>
-      <div class="servdetail-intro__media">
-        <div class="img-placeholder" aria-label="Imagen Wealth & Mind — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
+      <div class="servdetail-intro__media" data-reveal="left">
+        <div class="img-placeholder" data-spotlight aria-label="Imagen Wealth & Mind — pendiente foto aprobada" style="min-height:340px; border-radius:var(--radius-lg)">
           🌱 Taller Wealth &amp; Mind<br />(pendiente imagen aprobada)
         </div>
       </div>
@@ -49,31 +52,31 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- MÓDULOS -->
   <section class="section section-muted" aria-labelledby="modulos-wealth">
     <div class="container">
-      <div class="section-heading">
-        <span class="section-heading__eyebrow">Lo que incluye</span>
-        <h2 class="section-heading__title" id="modulos-wealth">Módulos y talleres</h2>
-        <p class="section-heading__body">
+      <div class="section-heading" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="up">Lo que incluye</span>
+        <h2 class="section-heading__title" id="modulos-wealth" data-reveal="up">Módulos y talleres</h2>
+        <p class="section-heading__body" data-reveal="up">
           Programas personalizados para empresas y comunidades de todos los
           tamaños, en formato presencial, híbrido o en línea.
         </p>
       </div>
-      <ul class="modulos-grid" role="list">
-        <li class="modulo-card">
+      <ul class="modulos-grid" role="list" data-stagger="100">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🧘</span>
           <h3 class="modulo-card__title">Gestión del estrés</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">📋</span>
           <h3 class="modulo-card__title">NOM-035 y riesgos psicosociales</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">🔥</span>
           <h3 class="modulo-card__title">Prevención del burnout</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
         </li>
-        <li class="modulo-card">
+        <li class="modulo-card" data-reveal="up" data-tilt="5" data-spotlight>
           <span class="modulo-card__icon" aria-hidden="true">❤️</span>
           <h3 class="modulo-card__title">Clima organizacional saludable</h3>
           <p class="modulo-card__body">Placeholder — pendiente contenido aprobado por Omnimind.</p>
@@ -84,12 +87,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   <!-- CTA -->
   <section class="section section-dark" aria-labelledby="cta-wm-heading">
-    <div class="container cta-simple">
-      <h2 id="cta-wm-heading">¿Tu organización necesita un ambiente más saludable?</h2>
+    <NeuralField density={0.6} />
+    <div class="container cta-simple" data-stagger="110">
+      <h2 id="cta-wm-heading" data-reveal="up">¿Tu organización necesita un ambiente más saludable?</h2>
       <p>Empecemos con un diagnóstico. Cuéntanos cómo está tu equipo hoy.</p>
-      <div class="cta-actions">
-        <a href="/contacto/" class="btn btn-accent">Solicitar cotización</a>
-        <a href="/servicios/" class="btn btn-outline">Ver todas las soluciones</a>
+      <div class="cta-actions" data-reveal="up">
+        <a href={url("/contacto/")} class="btn btn-accent">Solicitar cotización</a>
+        <a href={url("/servicios/")} class="btn btn-outline">Ver todas las soluciones</a>
       </div>
     </div>
   </section>

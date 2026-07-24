@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import AdminLayout from '../layouts/AdminLayout.astro';
 ---
 
@@ -28,8 +29,8 @@ import AdminLayout from '../layouts/AdminLayout.astro';
     <!-- SIDEBAR -->
     <aside class="cms-sidebar" aria-label="Navegación del CMS">
       <!-- Logo → enlace a la página principal del sitio -->
-      <a href="/" class="cms-sidebar__logo" aria-label="Volver al sitio principal de Omnimind">
-        <img src="/img/icononly_transparent_nobuffer.png" alt="" width="36" height="36" aria-hidden="true" />
+      <a href={url("/")} class="cms-sidebar__logo" aria-label="Volver al sitio principal de Omnimind">
+        <img src={url("/img/icononly_transparent_nobuffer.png")} alt="" width="36" height="36" aria-hidden="true" />
         <span>Omnimind CMS</span>
       </a>
 
@@ -47,7 +48,7 @@ import AdminLayout from '../layouts/AdminLayout.astro';
 
       <div class="cms-sidebar__footer">
         <!-- Link de regreso al sitio pública -->
-        <a href="/" class="cms-sidebar__site-link" title="Abrir el sitio público">
+        <a href={url("/")} class="cms-sidebar__site-link" title="Abrir el sitio público">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Ver sitio público
         </a>

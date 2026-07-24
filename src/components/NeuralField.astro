@@ -1,0 +1,41 @@
+---
+/**
+ * NeuralField.astro — Fondo animado para secciones oscuras.
+ *
+ * Combina dos capas:
+ *   1. Auroras: manchas de color desenfocadas que respiran (CSS puro).
+ *   2. Red neuronal: nodos que derivan y se enlazan al acercarse,
+ *      con atracción sutil hacia el cursor (canvas, ~60 nodos máx.).
+ *
+ * El contenedor padre debe tener `position: relative` y `overflow: hidden`.
+ * El contenido que va encima necesita `position: relative; z-index: 1`.
+ *
+ * Props:
+ *   density — multiplicador de nodos (0.6 discreto · 1 normal · 1.4 denso)
+ *   aurora  — activa/desactiva las manchas de color
+ *   parallax— las auroras se desplazan con el cursor si el contenedor
+ *             padre lleva `data-mouse-parallax`. El data-depth va en el
+ *             contenedor .aurora y no en cada blob: los blobs tienen su
+ *             propia animación de deriva y una animación CSS gana siempre
+ *             sobre el `transform` inline que aplica el parallax.
+ */
+interface Props {
+  density?: number;
+  aurora?: boolean;
+  parallax?: boolean;
+}
+
+const { density = 1, aurora = true, parallax = false } = Astro.props;
+---
+
+{
+  aurora && (
+    <div class="aurora" aria-hidden="true" data-depth={parallax ? 26 : undefined}>
+      <span class="aurora__blob aurora__blob--1" />
+      <span class="aurora__blob aurora__blob--2" />
+      <span class="aurora__blob aurora__blob--3" />
+    </div>
+  )
+}
+
+<canvas class="neural-field" data-neural={density} aria-hidden="true"></canvas>

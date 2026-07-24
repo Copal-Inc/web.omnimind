@@ -1,7 +1,9 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import Motion from '../components/Motion.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 interface Props {
@@ -23,8 +25,13 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
 <html lang="es">
   <head>
     <BaseHead title={pageTitle} description={description} />
+    <!-- Navegación con View Transitions: el cambio de página se funde
+         en lugar de parpadear en blanco. -->
+    <ClientRouter />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
     <Header transparent={transparentHeader} />
 
     <main id="main-content">
@@ -32,5 +39,8 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
     </main>
 
     <Footer />
+
+    <!-- Cursor, barra de progreso y motor de animación -->
+    <Motion />
   </body>
 </html>

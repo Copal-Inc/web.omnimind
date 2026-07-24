@@ -1,0 +1,747 @@
+/* ============================================================
+   OMNIMIND — Sistema de Movimiento
+   Tokens de animación + reveals + micro-interacciones + cursor
+   ------------------------------------------------------------
+   Todo el movimiento "opt-in" vive bajo html[data-motion="on"],
+   que activa un script inline en BaseHead. Si no hay JS o el
+   usuario pide menos movimiento, el sitio queda estático y
+   perfectamente legible.
+   ============================================================ */
+
+:root {
+  /* ── Curvas de aceleración ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ── Duraciones ── */
+  --dur-1: 160ms;
+  /* micro (color, opacidad) */
+  --dur-2: 280ms;
+  /* hover, elevación */
+  --dur-3: 480ms;
+  /* entradas cortas */
+  --dur-4: 750ms;
+  /* reveals de scroll */
+  --dur-5: 1200ms;
+  /* ambientales */
+
+  /* ── Resplandores de marca ── */
+  --glow-accent: 0 12px 30px -12px rgba(52, 171, 159, 0.55);
+  --glow-brand: 0 14px 34px -14px rgba(42, 76, 144, 0.55);
+}
+
+/* ══════════════════════════════════════════════════════════
+   1. REVEALS DE SCROLL
+   Uso:  <div data-reveal>            → fade + subir
+         <div data-reveal="left">     → entra desde la izquierda
+         <div data-reveal="scale">    → escala suave
+         <div data-reveal="blur">     → desenfoque cinematográfico
+         <div data-stagger>           → escalona a sus hijos
+   ══════════════════════════════════════════════════════════ */
+html[data-motion="on"] [data-reveal] {
+  opacity: 0;
+  transition:
+    opacity var(--dur-4) var(--ease-out-expo),
+    transform var(--dur-4) var(--ease-out-expo),
+    filter var(--dur-4) var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html[data-motion="on"] [data-reveal=""],
+html[data-motion="on"] [data-reveal="up"] {
+  transform: translate3d(0, 32px, 0);
+}
+
+html[data-motion="on"] [data-reveal="down"] {
+  transform: translate3d(0, -26px, 0);
+}
+
+html[data-motion="on"] [data-reveal="left"] {
+  transform: translate3d(-40px, 0, 0);
+}
+
+html[data-motion="on"] [data-reveal="right"] {
+  transform: translate3d(40px, 0, 0);
+}
+
+html[data-motion="on"] [data-reveal="scale"] {
+  transform: scale(0.93);
+}
+
+html[data-motion="on"] [data-reveal="blur"] {
+  transform: translate3d(0, 24px, 0);
+  filter: blur(12px);
+}
+
+html[data-motion="on"] [data-reveal="mask"] {
+  clip-path: inset(0 0 100% 0);
+  transform: translate3d(0, 18px, 0);
+}
+
+html[data-motion="on"] [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: inset(0 0 0 0);
+  will-change: auto;
+}
+
+/* ══════════════════════════════════════════════════════════
+   2. CURSOR PERSONALIZADO
+   Punto sólido (1:1, sin retraso → no pierde precisión) +
+   anillo que persigue con inercia. Solo en punteros finos.
+   ══════════════════════════════════════════════════════════ */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out-quart);
+}
+
+html.cursor-active .cursor {
+  opacity: 1;
+}
+
+html.cursor-active .cursor.is-native,
+html.cursor-active .cursor.is-out {
+  opacity: 0;
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  transform-origin: center;
+}
+
+.cursor__dot {
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px rgba(52, 171, 159, 0.9);
+  transition:
+    width var(--dur-2) var(--ease-out-back),
+    height var(--dur-2) var(--ease-out-back),
+    margin var(--dur-2) var(--ease-out-back),
+    background-color var(--dur-2) var(--ease-out-quart),
+    opacity var(--dur-2) var(--ease-out-quart);
+}
+
+.cursor__ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1.5px solid rgba(52, 171, 159, 0.75);
+  transition:
+    width var(--dur-2) var(--ease-out-back),
+    height var(--dur-2) var(--ease-out-back),
+    margin var(--dur-2) var(--ease-out-back),
+    border-color var(--dur-2) var(--ease-out-quart),
+    background-color var(--dur-2) var(--ease-out-quart);
+}
+
+/* Sobre elementos interactivos: el anillo se expande y se rellena */
+.cursor.is-hover .cursor__ring {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-color: rgba(52, 171, 159, 0.95);
+  background: rgba(52, 171, 159, 0.14);
+}
+
+.cursor.is-hover .cursor__dot {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+}
+
+/* Click */
+.cursor.is-down .cursor__ring {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  background: rgba(52, 171, 159, 0.3);
+}
+
+/* Sobre superficies oscuras el anillo se aclara */
+.cursor.is-dark .cursor__ring {
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.cursor.is-dark .cursor__dot {
+  background: #ffffff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+}
+
+/* Ocultar el cursor nativo solo cuando el personalizado está activo */
+@media (hover: hover) and (pointer: fine) {
+
+  html.cursor-active,
+  html.cursor-active * {
+    cursor: none !important;
+  }
+
+  /* …excepto donde el cursor del sistema aporta información */
+  html.cursor-active :is(input, textarea, select, [contenteditable="true"], [data-cursor="native"]),
+  html.cursor-active :is(input, textarea, select, [contenteditable="true"], [data-cursor="native"]) * {
+    cursor: auto !important;
+  }
+
+  html.cursor-active :is(textarea, input[type="text"], input[type="email"], input[type="tel"]) {
+    cursor: text !important;
+  }
+}
+
+@media (hover: none),
+(pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   3. BARRA DE PROGRESO DE LECTURA
+   ══════════════════════════════════════════════════════════ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 500;
+  pointer-events: none;
+  background: transparent;
+}
+
+.scroll-progress__bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg,
+      var(--color-brand-primary) 0%,
+      var(--color-accent) 55%,
+      #6fe3d4 100%);
+  box-shadow: 0 0 12px rgba(52, 171, 159, 0.7);
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════════════════════════
+   4. SPOTLIGHT QUE SIGUE AL CURSOR
+   El elemento recibe --mx / --my (px) desde JS.
+   ══════════════════════════════════════════════════════════ */
+[data-spotlight] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-spotlight]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-3) var(--ease-out-quart);
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(52, 171, 159, 0.16),
+      rgba(42, 76, 144, 0.08) 40%,
+      transparent 68%);
+}
+
+[data-spotlight]:hover::before,
+[data-spotlight]:focus-within::before {
+  opacity: 1;
+}
+
+[data-spotlight]>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* Variante sobre fondo oscuro */
+[data-spotlight="dark"]::before {
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, 0.12),
+      rgba(52, 171, 159, 0.1) 45%,
+      transparent 70%);
+}
+
+/* ══════════════════════════════════════════════════════════
+   5. TILT 3D (tarjetas)
+   JS aplica --rx / --ry en grados.
+   ══════════════════════════════════════════════════════════ */
+[data-tilt] {
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(0, var(--lift, 0px), 0);
+  transition: transform var(--dur-3) var(--ease-out-quart);
+}
+
+[data-tilt].is-tilting {
+  transition: transform 90ms linear;
+}
+
+/* ══════════════════════════════════════════════════════════
+   6. BOTONES — brillo, elevación e imán
+   ══════════════════════════════════════════════════════════ */
+.btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    background-color var(--dur-2) var(--ease-out-quart),
+    color var(--dur-2) var(--ease-out-quart),
+    border-color var(--dur-2) var(--ease-out-quart),
+    box-shadow var(--dur-3) var(--ease-out-quart),
+    transform var(--dur-2) var(--ease-out-back);
+}
+
+/* Barrido de luz diagonal */
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 45%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(100deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.32) 50%,
+      transparent 100%);
+  transform: skewX(-18deg);
+}
+
+html[data-motion="on"] .btn:hover::after {
+  animation: btn-sheen 720ms var(--ease-out-quart) forwards;
+}
+
+@keyframes btn-sheen {
+  to {
+    left: 140%;
+  }
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-brand);
+}
+
+.btn-accent:hover {
+  box-shadow: var(--glow-accent);
+}
+
+.btn-outline:hover,
+.btn-outline-dark:hover {
+  box-shadow: var(--glow-accent);
+}
+
+/* Botón imantado: el contenido se adelanta ligeramente */
+[data-magnetic] {
+  will-change: transform;
+}
+
+[data-magnetic] .btn__label,
+[data-magnetic]>span {
+  display: inline-block;
+  transition: transform var(--dur-2) var(--ease-out-quart);
+}
+
+/* Flecha que avanza en los CTA de texto */
+.btn:hover .btn__arrow {
+  transform: translateX(4px);
+}
+
+.btn__arrow {
+  display: inline-block;
+  transition: transform var(--dur-2) var(--ease-out-back);
+}
+
+/* ══════════════════════════════════════════════════════════
+   7. ENLACES — subrayado animado
+   ══════════════════════════════════════════════════════════ */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 100% 50%;
+  transition: transform var(--dur-2) var(--ease-out-quart);
+}
+
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: 0 50%;
+}
+
+.prose a {
+  text-decoration-color: rgba(42, 76, 144, 0.35);
+  transition:
+    text-decoration-color var(--dur-2) var(--ease-out-quart),
+    color var(--dur-2) var(--ease-out-quart);
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* ══════════════════════════════════════════════════════════
+   8. PLACEHOLDERS DE IMAGEN — brillo respirando
+   Mientras no haya fotos definitivas, el shimmer los hace
+   ver intencionales en lugar de "rotos".
+   ══════════════════════════════════════════════════════════ */
+.img-placeholder {
+  position: relative;
+  overflow: hidden;
+}
+
+.img-placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 65%);
+  transform: translateX(-100%);
+}
+
+html[data-motion="on"] .img-placeholder::after {
+  animation: shimmer 4.5s var(--ease-soft) infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  55%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Zoom sutil de la imagen dentro de tarjetas al hacer hover */
+.card-media {
+  overflow: hidden;
+}
+
+.card-media>* {
+  transition: transform var(--dur-4) var(--ease-out-quart);
+}
+
+.card-hover:hover .card-media>* {
+  transform: scale(1.06);
+}
+
+/* ══════════════════════════════════════════════════════════
+   9. CAMPO NEURONAL (fondo de secciones oscuras)
+   ══════════════════════════════════════════════════════════ */
+/* Toda sección oscura puede alojar un <NeuralField />: se recorta al
+   borde de la sección y su contenido queda por encima del fondo. */
+.section-dark {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-dark>.container {
+  position: relative;
+  z-index: 1;
+}
+
+.neural-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-5) var(--ease-out-quart);
+}
+
+.neural-field.is-live {
+  opacity: 1;
+}
+
+/* Auroras: manchas de color que respiran detrás del contenido */
+.aurora {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.aurora__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.55;
+  /* screen sobre el índigo del fondo: la luz se suma en vez de taparlo */
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.aurora__blob--1 {
+  width: 42vw;
+  height: 42vw;
+  min-width: 320px;
+  min-height: 320px;
+  top: -8%;
+  left: -6%;
+  background: radial-gradient(circle, rgba(52, 171, 159, 0.75), transparent 65%);
+}
+
+.aurora__blob--2 {
+  width: 38vw;
+  height: 38vw;
+  min-width: 280px;
+  min-height: 280px;
+  bottom: -14%;
+  right: -6%;
+  background: radial-gradient(circle, rgba(74, 116, 205, 0.7), transparent 65%);
+}
+
+.aurora__blob--3 {
+  width: 26vw;
+  height: 26vw;
+  min-width: 220px;
+  min-height: 220px;
+  top: 35%;
+  left: 45%;
+  background: radial-gradient(circle, rgba(111, 227, 212, 0.45), transparent 65%);
+}
+
+html[data-motion="on"] .aurora__blob--1 {
+  animation: drift-a 22s var(--ease-soft) infinite alternate;
+}
+
+html[data-motion="on"] .aurora__blob--2 {
+  animation: drift-b 26s var(--ease-soft) infinite alternate;
+}
+
+html[data-motion="on"] .aurora__blob--3 {
+  animation: drift-c 19s var(--ease-soft) infinite alternate;
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate3d(8vw, 6vh, 0) scale(1.15);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate3d(-9vw, -7vh, 0) scale(1.1);
+  }
+}
+
+@keyframes drift-c {
+  to {
+    transform: translate3d(-6vw, 8vh, 0) scale(0.88);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   10. ENTRADAS DE PÁGINA (hero, sin esperar al scroll)
+   ══════════════════════════════════════════════════════════ */
+html[data-motion="on"] [data-enter] {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  animation: enter-up var(--dur-4) var(--ease-out-expo) forwards;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+@keyframes enter-up {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Texto con gradiente animado — palabra destacada del hero */
+.text-shine {
+  background: linear-gradient(100deg,
+      var(--color-accent) 0%,
+      #7ff0e0 30%,
+      var(--color-accent) 60%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-motion="on"] .text-shine {
+  animation: shine-sweep 7s linear infinite;
+}
+
+@keyframes shine-sweep {
+  to {
+    background-position: -250% 0;
+  }
+}
+
+/* Indicador de scroll */
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color var(--dur-2) var(--ease-out-quart);
+}
+
+.scroll-hint:hover {
+  color: #fff;
+}
+
+.scroll-hint__line {
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-hint__line::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: -60%;
+  height: 60%;
+  background: var(--color-accent);
+}
+
+html[data-motion="on"] .scroll-hint__line::after {
+  animation: scroll-trace 2.2s var(--ease-soft) infinite;
+}
+
+@keyframes scroll-trace {
+  0% {
+    top: -60%;
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 110%;
+    opacity: 0;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   11. CONTADORES
+   ══════════════════════════════════════════════════════════ */
+[data-count] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ══════════════════════════════════════════════════════════
+   12. TRANSICIONES ENTRE PÁGINAS (View Transitions)
+   ══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: vt-out 240ms var(--ease-out-quart) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-in 380ms var(--ease-out-expo) both;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   13. FOCO VISIBLE COHERENTE
+   ══════════════════════════════════════════════════════════ */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ══════════════════════════════════════════════════════════
+   14. MOVIMIENTO REDUCIDO
+   ══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+
+  .cursor,
+  .neural-field,
+  .scroll-hint__line::after {
+    display: none !important;
+  }
+
+  .aurora__blob {
+    animation: none !important;
+  }
+
+  html[data-motion] [data-reveal],
+  html[data-motion] [data-enter] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    animation: none !important;
+  }
+
+  html.cursor-active,
+  html.cursor-active * {
+    cursor: auto !important;
+  }
+}

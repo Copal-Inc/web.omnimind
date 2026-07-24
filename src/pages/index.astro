@@ -1,5 +1,7 @@
 ---
+import { url } from '../lib/url';
 import { getCollection } from "astro:content";
+import NeuralField from "../components/NeuralField.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Últimos 3 posts para la sección de blog
@@ -21,33 +23,56 @@ const recentPosts = allPosts
   <!-- ════════════════════════════════════════════════
        HERO
   ════════════════════════════════════════════════ -->
-  <section class="hero" aria-label="Hero — propuesta de valor principal">
-    <!-- Imagen de fondo (placeholder hasta tener foto oficial aprobada) -->
-    <div class="hero__bg" aria-hidden="true"></div>
+  <section
+    class="hero"
+    aria-label="Hero — propuesta de valor principal"
+    data-mouse-parallax
+  >
+    <!-- Imagen de fondo (placeholder hasta tener foto oficial aprobada).
+         data-depth invierte el movimiento del cursor → sensación de profundidad. -->
+    <div class="hero__bg" aria-hidden="true" data-depth="-14"></div>
+
+    <!-- Auroras + red neuronal reactiva al cursor -->
+    <NeuralField density={1.15} parallax />
 
     <div class="container hero__content">
-      <p class="hero__eyebrow">
+      <p class="hero__eyebrow" data-enter style="--enter-delay: 120ms">
         Intervenciones organizacionales basadas en evidencia
       </p>
-      <h1 class="hero__title">
+      <h1 class="hero__title" data-enter style="--enter-delay: 220ms">
         Reinventando la<br />
-        <span class="hero__title-accent">Productividad</span>
+        <span class="hero__title-accent text-shine">Productividad</span>
       </h1>
-      <p class="hero__body">
+      <p class="hero__body" data-enter style="--enter-delay: 340ms">
         Somos una empresa dedicada al crecimiento de las personas, enfocándonos
         en el equilibrio para lograr una vida exitosa y plena. Nos
         especializamos en talleres y comunidades tanto empresariales como
         sociales.
       </p>
-      <div class="hero__actions">
-        <a href="/contacto/" class="btn btn-primary hero__cta-primary">
-          Solicitar cotización
+      <div class="hero__actions" data-enter style="--enter-delay: 450ms">
+        <!-- Acento teal: sobre el índigo del hero el azul de marca
+             no separaba lo suficiente al CTA principal. -->
+        <a
+          href={url("/contacto/")}
+          class="btn btn-accent hero__cta-primary"
+          data-magnetic="0.2"
+        >
+          <span class="btn__label">Solicitar cotización</span>
         </a>
-        <a href="/servicios/" class="btn btn-outline hero__cta-secondary">
-          Explorar soluciones
+        <a
+          href={url("/servicios/")}
+          class="btn btn-outline hero__cta-secondary"
+          data-magnetic="0.2"
+        >
+          <span class="btn__label">Explorar soluciones</span>
         </a>
       </div>
     </div>
+
+    <a class="scroll-hint" href="#soluciones" aria-label="Ir a las soluciones">
+      <span>Desliza</span>
+      <span class="scroll-hint__line" aria-hidden="true"></span>
+    </a>
   </section>
 
   <!-- ════════════════════════════════════════════════
@@ -57,23 +82,23 @@ const recentPosts = allPosts
     class="credibility-strip section-muted"
     aria-label="Indicadores de credibilidad"
   >
-    <div class="container credibility-strip__inner">
-      <div class="credibility-item">
-        <span class="credibility-item__number">+50</span>
+    <div class="container credibility-strip__inner" data-stagger="110">
+      <div class="credibility-item" data-reveal="up">
+        <span class="credibility-item__number" data-count="+50">+50</span>
         <span class="credibility-item__label">Organizaciones acompañadas</span>
       </div>
       <div class="credibility-divider" aria-hidden="true"></div>
-      <div class="credibility-item">
-        <span class="credibility-item__number">3</span>
+      <div class="credibility-item" data-reveal="up">
+        <span class="credibility-item__number" data-count="3">3</span>
         <span class="credibility-item__label">Líneas de intervención</span>
       </div>
       <div class="credibility-divider" aria-hidden="true"></div>
-      <div class="credibility-item">
-        <span class="credibility-item__number">100%</span>
+      <div class="credibility-item" data-reveal="up">
+        <span class="credibility-item__number" data-count="100%">100%</span>
         <span class="credibility-item__label">Talleres a medida</span>
       </div>
       <div class="credibility-divider" aria-hidden="true"></div>
-      <div class="credibility-item">
+      <div class="credibility-item" data-reveal="up">
         <span class="credibility-item__number">B2B</span>
         <span class="credibility-item__label">Enfoque empresarial</span>
       </div>
@@ -83,24 +108,35 @@ const recentPosts = allPosts
   <!-- ════════════════════════════════════════════════
        LÍNEAS DE SERVICIO
   ════════════════════════════════════════════════ -->
-  <section class="section services" aria-labelledby="services-heading">
+  <section
+    class="section services"
+    id="soluciones"
+    aria-labelledby="services-heading"
+  >
     <div class="container">
-      <div class="section-heading">
-        <span class="section-heading__eyebrow">Nuestras soluciones</span>
-        <h2 class="section-heading__title" id="services-heading">
+      <div class="section-heading" data-stagger="120">
+        <span class="section-heading__eyebrow" data-reveal="up"
+          >Nuestras soluciones</span
+        >
+        <h2 class="section-heading__title" id="services-heading" data-reveal="up">
           Tres líneas de intervención, un solo propósito
         </h2>
-        <p class="section-heading__body">
+        <p class="section-heading__body" data-reveal="up">
           Diseñamos e implementamos talleres y programas para organizaciones que
           buscan mejorar el bienestar, la productividad y la resiliencia de sus
           equipos.
         </p>
       </div>
 
-      <div class="grid-3 services__grid">
+      <div class="grid-3 services__grid" data-stagger="140">
         <!-- Empowermind -->
-        <article class="service-card service-card--empowermind">
-          <div class="service-card__img-wrap">
+        <article
+          class="service-card service-card--empowermind card-hover"
+          data-reveal="up"
+          data-tilt="4"
+          data-spotlight
+        >
+          <div class="service-card__img-wrap card-media">
             <!-- Placeholder de imagen — pendiente foto aprobada -->
             <div
               class="img-placeholder service-card__img-placeholder"
@@ -112,7 +148,7 @@ const recentPosts = allPosts
           <div class="service-card__body">
             <div class="service-card__badge" aria-hidden="true">01</div>
             <h3 class="service-card__title">
-              <a href="/servicios/empowermind/" class="service-card__link"
+              <a href={url("/servicios/empowermind/")} class="service-card__link"
                 >Empowermind</a
               >
             </h3>
@@ -127,17 +163,22 @@ const recentPosts = allPosts
               <li>Liderazgo</li>
             </ul>
             <a
-              href="/servicios/empowermind/"
+              href={url("/servicios/empowermind/")}
               class="btn btn-outline-dark service-card__cta"
             >
-              Conocer más →
+              Conocer más <span class="btn__arrow" aria-hidden="true">→</span>
             </a>
           </div>
         </article>
 
         <!-- Neurowise -->
-        <article class="service-card service-card--neurowise">
-          <div class="service-card__img-wrap">
+        <article
+          class="service-card service-card--neurowise card-hover"
+          data-reveal="up"
+          data-tilt="4"
+          data-spotlight
+        >
+          <div class="service-card__img-wrap card-media">
             <div
               class="img-placeholder service-card__img-placeholder"
               aria-label="Imagen Neurowise — placeholder"
@@ -148,7 +189,7 @@ const recentPosts = allPosts
           <div class="service-card__body">
             <div class="service-card__badge" aria-hidden="true">02</div>
             <h3 class="service-card__title">
-              <a href="/servicios/neurowise/" class="service-card__link"
+              <a href={url("/servicios/neurowise/")} class="service-card__link"
                 >Neurowise</a
               >
             </h3>
@@ -163,17 +204,22 @@ const recentPosts = allPosts
               <li>Adaptabilidad</li>
             </ul>
             <a
-              href="/servicios/neurowise/"
+              href={url("/servicios/neurowise/")}
               class="btn btn-outline-dark service-card__cta"
             >
-              Conocer más →
+              Conocer más <span class="btn__arrow" aria-hidden="true">→</span>
             </a>
           </div>
         </article>
 
         <!-- Wealth & Mind -->
-        <article class="service-card service-card--wealth">
-          <div class="service-card__img-wrap">
+        <article
+          class="service-card service-card--wealth card-hover"
+          data-reveal="up"
+          data-tilt="4"
+          data-spotlight
+        >
+          <div class="service-card__img-wrap card-media">
             <div
               class="img-placeholder service-card__img-placeholder"
               aria-label="Imagen Wealth & Mind — placeholder"
@@ -184,7 +230,7 @@ const recentPosts = allPosts
           <div class="service-card__body">
             <div class="service-card__badge" aria-hidden="true">03</div>
             <h3 class="service-card__title">
-              <a href="/servicios/wealth-mind/" class="service-card__link"
+              <a href={url("/servicios/wealth-mind/")} class="service-card__link"
                 >Wealth & Mind</a
               >
             </h3>
@@ -199,10 +245,10 @@ const recentPosts = allPosts
               <li>Riesgos psicosociales</li>
             </ul>
             <a
-              href="/servicios/wealth-mind/"
+              href={url("/servicios/wealth-mind/")}
               class="btn btn-outline-dark service-card__cta"
             >
-              Conocer más →
+              Conocer más <span class="btn__arrow" aria-hidden="true">→</span>
             </a>
           </div>
         </article>
@@ -218,7 +264,7 @@ const recentPosts = allPosts
     aria-labelledby="about-heading"
   >
     <div class="container about-intro__grid">
-      <div class="about-intro__image">
+      <div class="about-intro__image" data-reveal="left">
         <!-- Placeholder de imagen del equipo — pendiente foto aprobada -->
         <div
           class="img-placeholder about-intro__img-placeholder"
@@ -227,20 +273,28 @@ const recentPosts = allPosts
           📸 Foto del equipo<br />(pendiente aprobación)
         </div>
       </div>
-      <div class="about-intro__content">
-        <span class="section-heading__eyebrow">Sobre nosotros</span>
-        <h2 id="about-heading">Una empresa dedicada al crecimiento humano</h2>
-        <p>
+      <div class="about-intro__content" data-stagger="110">
+        <span class="section-heading__eyebrow" data-reveal="right"
+          >Sobre nosotros</span
+        >
+        <h2 id="about-heading" data-reveal="right">
+          Una empresa dedicada al crecimiento humano
+        </h2>
+        <p data-reveal="right">
           En Omnimind creemos que una mente sana es una mente próspera. Por eso
           diseñamos e implementamos intervenciones organizacionales con base
           científica, siempre dándole el toque humano a todo nuestro trabajo.
         </p>
-        <p>
+        <p data-reveal="right">
           Nos especializamos en el manejo de comunidades tanto empresariales
           como sociales, acompañando a organizaciones en su camino hacia el
           bienestar y la productividad sostenible.
         </p>
-        <a href="/sobre-nosotros/" class="btn btn-primary">
+        <a
+          href={url("/sobre-nosotros/")}
+          class="btn btn-primary about-intro__cta"
+          data-reveal="right"
+        >
           Conocer nuestro equipo
         </a>
       </div>
@@ -254,23 +308,29 @@ const recentPosts = allPosts
     recentPosts.length > 0 && (
       <section class="section blog-recent" aria-labelledby="blog-heading">
         <div class="container">
-          <div class="section-heading">
-            <span class="section-heading__eyebrow">Blog y recursos</span>
-            <h2 class="section-heading__title" id="blog-heading">
+          <div class="section-heading" data-stagger="120">
+            <span class="section-heading__eyebrow" data-reveal="up">
+              Blog y recursos
+            </span>
+            <h2 class="section-heading__title" id="blog-heading" data-reveal="up">
               Últimos artículos
             </h2>
-            <p class="section-heading__body">
+            <p class="section-heading__body" data-reveal="up">
               Contenido basado en evidencia sobre productividad, bienestar y
               neurociencias aplicadas a las organizaciones.
             </p>
           </div>
 
-          <div class="grid-3 blog-recent__grid">
+          <div class="grid-3 blog-recent__grid" data-stagger="130">
             {recentPosts.map((post) => {
               const date = post.data.publishDate || post.data.pubDate;
               return (
-                <article class="blog-card">
-                  <div class="blog-card__img-wrap">
+                <article
+                  class="blog-card card-hover"
+                  data-reveal="up"
+                  data-spotlight
+                >
+                  <div class="blog-card__img-wrap card-media">
                     <div
                       class="img-placeholder blog-card__img"
                       aria-label={`Imagen del artículo: ${post.data.title}`}
@@ -285,7 +345,7 @@ const recentPosts = allPosts
                       </span>
                     )}
                     <h3 class="blog-card__title">
-                      <a href={`/blog/${post.id}/`} class="blog-card__link">
+                      <a href={url(`/blog/${post.id}/`)} class="blog-card__link">
                         {post.data.title}
                       </a>
                     </h3>
@@ -308,8 +368,8 @@ const recentPosts = allPosts
             })}
           </div>
 
-          <div class="blog-recent__more">
-            <a href="/blog/" class="btn btn-outline-dark">
+          <div class="blog-recent__more" data-reveal="up">
+            <a href={url("/blog/")} class="btn btn-outline-dark">
               Ver todos los artículos
             </a>
           </div>
@@ -325,21 +385,23 @@ const recentPosts = allPosts
     class="section section-dark quote-cta"
     aria-labelledby="quote-cta-heading"
   >
-    <div class="container quote-cta__inner">
+    <NeuralField density={0.7} />
+
+    <div class="container quote-cta__inner" data-stagger="120">
       <div class="quote-cta__content">
-        <h2 id="quote-cta-heading" class="quote-cta__title">
+        <h2 id="quote-cta-heading" class="quote-cta__title" data-reveal="up">
           ¿Listo para transformar tu organización?
         </h2>
-        <p class="quote-cta__body">
+        <p class="quote-cta__body" data-reveal="up">
           Cuéntanos el reto que enfrenta tu equipo y diseñamos una intervención
           a la medida de tu organización.
         </p>
-        <div class="quote-cta__actions">
-          <a href="/contacto/" class="btn btn-accent">
-            Solicitar una cotización
+        <div class="quote-cta__actions" data-reveal="up">
+          <a href={url("/contacto/")} class="btn btn-accent" data-magnetic="0.18">
+            <span class="btn__label">Solicitar una cotización</span>
           </a>
-          <a href="/servicios/" class="btn btn-outline">
-            Explorar soluciones
+          <a href={url("/servicios/")} class="btn btn-outline" data-magnetic="0.18">
+            <span class="btn__label">Explorar soluciones</span>
           </a>
         </div>
       </div>
@@ -351,7 +413,7 @@ const recentPosts = allPosts
   /* ── HERO ── */
   .hero {
     position: relative;
-    min-height: 560px;
+    min-height: 620px;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -360,7 +422,7 @@ const recentPosts = allPosts
 
   .hero__bg {
     position: absolute;
-    inset: 0;
+    inset: -6%;
     background:
       linear-gradient(
         135deg,
@@ -377,8 +439,8 @@ const recentPosts = allPosts
 
   .hero__content {
     position: relative;
-    z-index: 1;
-    padding-block: 5rem;
+    z-index: 2;
+    padding-block: 6rem;
     max-width: 900px;
     text-align: center;
   }
@@ -401,8 +463,10 @@ const recentPosts = allPosts
     margin-bottom: 1.25rem;
   }
 
+  /* El color lo aporta .text-shine (gradiente animado) */
   .hero__title-accent {
-    color: var(--color-accent);
+    display: inline-block;
+    padding-bottom: 0.08em;
   }
 
   .hero__body {
@@ -441,6 +505,11 @@ const recentPosts = allPosts
     align-items: center;
     text-align: center;
     gap: 0.25rem;
+    transition: transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .credibility-item:hover {
+    transform: translateY(-4px);
   }
 
   .credibility-item__number {
@@ -449,6 +518,11 @@ const recentPosts = allPosts
     font-weight: 650;
     color: var(--color-brand-primary);
     line-height: 1;
+    transition: color var(--dur-2, 0.28s) var(--ease-out-quart, ease);
+  }
+
+  .credibility-item:hover .credibility-item__number {
+    color: var(--color-accent-dark);
   }
 
   .credibility-item__label {
@@ -463,7 +537,12 @@ const recentPosts = allPosts
   .credibility-divider {
     width: 2px;
     height: 70px;
-    background: var(--color-border);
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--color-border-strong),
+      transparent
+    );
     flex-shrink: 0;
   }
 
@@ -481,13 +560,14 @@ const recentPosts = allPosts
     display: flex;
     flex-direction: column;
     transition:
-      box-shadow var(--transition-slow),
-      transform var(--transition-slow);
+      box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      border-color var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-quart, ease);
   }
 
   .service-card:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
+    border-color: rgba(52, 171, 159, 0.45);
   }
 
   .service-card__img-placeholder {
@@ -510,6 +590,14 @@ const recentPosts = allPosts
     color: var(--color-border);
     line-height: 1;
     margin-bottom: -0.25rem;
+    transition:
+      color var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-back, ease);
+  }
+
+  .service-card:hover .service-card__badge {
+    color: var(--color-accent);
+    transform: translateX(4px);
   }
 
   .service-card__title {
@@ -520,11 +608,22 @@ const recentPosts = allPosts
   .service-card__link {
     color: var(--color-brand-primary);
     text-decoration: none;
+    background-image: linear-gradient(
+      var(--color-accent),
+      var(--color-accent)
+    );
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    transition:
+      background-size var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease);
   }
 
+  .service-card:hover .service-card__link,
   .service-card__link:hover {
     color: var(--color-accent-dark);
-    text-decoration: underline;
+    background-size: 100% 2px;
   }
 
   .service-card__desc {
@@ -553,6 +652,18 @@ const recentPosts = allPosts
     padding: 0.2em 0.6em;
     border-radius: var(--radius-pill);
     font-family: var(--font-heading);
+    transition:
+      background-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      border-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-2, 0.28s) var(--ease-out-back, ease);
+  }
+
+  .service-card__tags li:hover {
+    background: rgba(52, 171, 159, 0.12);
+    border-color: rgba(52, 171, 159, 0.4);
+    color: var(--color-accent-dark);
+    transform: translateY(-2px);
   }
 
   .service-card__cta {
@@ -589,6 +700,10 @@ const recentPosts = allPosts
     color: var(--color-text-muted);
   }
 
+  .about-intro__cta {
+    align-self: flex-start;
+  }
+
   /* ── BLOG CARDS ── */
   .blog-card {
     background: var(--color-surface);
@@ -599,13 +714,15 @@ const recentPosts = allPosts
     display: flex;
     flex-direction: column;
     transition:
-      box-shadow var(--transition-slow),
-      transform var(--transition-slow);
+      box-shadow var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      border-color var(--dur-3, 0.45s) var(--ease-out-quart, ease),
+      transform var(--dur-3, 0.45s) var(--ease-out-quart, ease);
   }
 
   .blog-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(52, 171, 159, 0.4);
+    transform: translateY(-5px);
   }
 
   .blog-card__img {
@@ -638,10 +755,18 @@ const recentPosts = allPosts
   .blog-card__link {
     color: var(--color-brand-primary);
     text-decoration: none;
+    background-image: linear-gradient(
+      var(--color-accent),
+      var(--color-accent)
+    );
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    transition: background-size var(--dur-3, 0.45s) var(--ease-out-quart, ease);
   }
 
-  .blog-card__link:hover {
-    text-decoration: underline;
+  .blog-card:hover .blog-card__link {
+    background-size: 100% 2px;
   }
 
   .blog-card__excerpt {
@@ -671,7 +796,14 @@ const recentPosts = allPosts
   }
 
   /* ── QUOTE CTA ── */
+  .quote-cta {
+    position: relative;
+    overflow: hidden;
+  }
+
   .quote-cta__inner {
+    position: relative;
+    z-index: 1;
     text-align: center;
     max-width: 680px;
     margin-inline: auto;
@@ -712,6 +844,10 @@ const recentPosts = allPosts
   }
 
   @media (max-width: 600px) {
+    .hero {
+      min-height: 520px;
+    }
+
     .hero__actions {
       flex-direction: column;
     }
@@ -719,6 +855,10 @@ const recentPosts = allPosts
     .hero__actions .btn {
       width: 100%;
       justify-content: center;
+    }
+
+    .scroll-hint {
+      display: none;
     }
 
     .quote-cta__actions {

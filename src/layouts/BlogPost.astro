@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -31,7 +32,7 @@ const displayDate = publishDate || pubDate;
 
     <!-- PORTADA -->
     {(heroImage || cover) && (
-      <div class="post-cover">
+      <div class="post-cover" data-reveal="scale">
         {heroImage
           ? <Image class="post-cover__img" width={1200} height={600} src={heroImage} alt={coverAlt || title} />
           : <img class="post-cover__img" src={cover} alt={coverAlt || title} width="1200" height="600" />
@@ -41,22 +42,22 @@ const displayDate = publishDate || pubDate;
 
     <!-- CABECERA DEL ARTÍCULO -->
     <header class="post-header section-muted">
-      <div class="container-sm post-header__inner">
+      <div class="container-sm post-header__inner" data-stagger="90">
         <!-- Breadcrumb -->
-        <nav aria-label="Breadcrumb" class="post-breadcrumb">
-          <a href="/blog/">← Blog</a>
+        <nav aria-label="Breadcrumb" class="post-breadcrumb" data-reveal="up">
+          <a href={url("/blog/")} class="post-breadcrumb__link">← Blog</a>
         </nav>
 
         <!-- Metadatos -->
-        <div class="post-meta">
+        <div class="post-meta" data-reveal="up">
           {category && <span class="post-meta__category">{category}</span>}
           {featured && <span class="post-meta__featured">★ Destacado</span>}
           {draft && <span class="post-meta__draft">Borrador</span>}
         </div>
 
-        <h1 class="post-header__title">{title}</h1>
+        <h1 class="post-header__title" data-reveal="up">{title}</h1>
 
-        <div class="post-header__sub">
+        <div class="post-header__sub" data-reveal="up">
           {displayDate && (
             <time datetime={displayDate.toISOString()}>
               <FormattedDate date={displayDate} />
@@ -71,7 +72,7 @@ const displayDate = publishDate || pubDate;
         </div>
 
         {tags.length > 0 && (
-          <ul class="post-tags" role="list" aria-label="Etiquetas del artículo">
+          <ul class="post-tags" role="list" aria-label="Etiquetas del artículo" data-reveal="up">
             {tags.map((tag: string) => <li class="post-tags__tag">#{tag}</li>)}
           </ul>
         )}
@@ -80,16 +81,16 @@ const displayDate = publishDate || pubDate;
 
     <!-- CONTENIDO -->
     <div class="section">
-      <div class="container-sm prose">
+      <div class="container-sm prose" data-reveal="blur">
         <slot />
       </div>
     </div>
 
     <!-- PIE DEL ARTÍCULO -->
     <footer class="post-footer section-muted">
-      <div class="container-sm post-footer__inner">
-        <a href="/blog/" class="btn btn-outline-dark">← Volver al blog</a>
-        <a href="/contacto/" class="btn btn-primary">Solicitar cotización</a>
+      <div class="container-sm post-footer__inner" data-reveal="up">
+        <a href={url("/blog/")} class="btn btn-outline-dark">← Volver al blog</a>
+        <a href={url("/contacto/")} class="btn btn-primary">Solicitar cotización</a>
       </div>
     </footer>
 
@@ -208,6 +209,39 @@ const displayDate = publishDate || pubDate;
     padding: 0.2em 0.6em;
     border-radius: var(--radius-pill);
     font-family: var(--font-heading);
+  }
+
+  /* La flecha del breadcrumb retrocede al pasar el cursor */
+  .post-breadcrumb__link {
+    display: inline-block;
+    transition: transform var(--dur-2, 0.28s) var(--ease-out-back, ease);
+  }
+
+  .post-breadcrumb__link:hover {
+    transform: translateX(-4px);
+  }
+
+  .post-tags__tag {
+    transition:
+      background-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      border-color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      color var(--dur-2, 0.28s) var(--ease-out-quart, ease),
+      transform var(--dur-2, 0.28s) var(--ease-out-back, ease);
+  }
+
+  .post-tags__tag:hover {
+    background: rgba(52, 171, 159, 0.12);
+    border-color: rgba(52, 171, 159, 0.4);
+    color: var(--color-accent-dark);
+    transform: translateY(-2px);
+  }
+
+  .post-cover__img {
+    transition: transform var(--dur-5, 1.2s) var(--ease-out-quart, ease);
+  }
+
+  .post-cover:hover .post-cover__img {
+    transform: scale(1.03);
   }
 
   /* ── FOOTER ── */

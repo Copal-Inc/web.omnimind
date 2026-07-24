@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -8,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 >
 
   <section class="section" aria-labelledby="privacidad-heading">
-    <div class="container-sm prose">
+    <div class="container-sm prose" data-reveal="up">
       <h1 id="privacidad-heading">Aviso de Privacidad</h1>
 
       <p class="aviso-fecha">
@@ -81,7 +82,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p>
         Para cualquier duda relacionada con el tratamiento de sus datos, puede
         contactarnos a través de nuestra
-        <a href="/contacto/">página de contacto</a>
+        <a href={url("/contacto/")}>página de contacto</a>
         o enviando un correo a
         <a href="mailto:contacto@omnimind.mx">contacto@omnimind.mx</a>.
       </p>
