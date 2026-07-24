@@ -26,7 +26,10 @@ const navLinks = [
 ];
 
 function isActive(href: string): boolean {
-  if (href === "/") return pathname === "/";
+  // El enlace de inicio necesita coincidir exactamente para no marcarse en todas las páginas
+  if (href === "/" || href === `${base}/`) {
+    return pathname === href || pathname === base;
+  }
   return pathname.startsWith(href);
 }
 ---
