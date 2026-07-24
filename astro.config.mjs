@@ -6,7 +6,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://copalinc.com',
+	base: '/web.omnimind',
 	integrations: [mdx(), sitemap()],
 	server: {
 		host: "127.0.0.1",
