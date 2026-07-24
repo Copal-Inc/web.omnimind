@@ -1,15 +1,22 @@
 <!doctype html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Omnimind CMS</title>
-    <!-- Decap CMS — cargado desde CDN, sin instalación npm -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </head>
   <body>
-    <!-- Decap CMS monta su interfaz en el body automáticamente -->
-    <!-- La configuración se lee desde /admin/config.yml -->
+    <!--
+      Decap CMS monta su interfaz sobre <body>, así que el script debe
+      ejecutarse cuando el body ya existe. Si se coloca en <head> sin
+      `defer`, corre antes de tiempo y falla con
+      "Cannot read properties of null (reading 'appendChild')",
+      dejando la página en blanco.
+
+      La configuración se lee de `config.yml` relativo a esta página
+      (→ /admin/config.yml), lo cual funciona con el `base` del sitio.
+    -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </body>
 </html>
