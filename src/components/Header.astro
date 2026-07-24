@@ -8,19 +8,21 @@ interface Props {
 const { transparent = false } = Astro.props;
 const pathname = Astro.url.pathname;
 
+const base = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const navLinks = [
-  { href: "/", label: "Inicio" },
-  { href: "/sobre-nosotras/", label: "Sobre Omnimind" },
+  { href: `${base}/`, label: "Inicio" },
+  { href: `${base}/sobre-nosotras/`, label: "Sobre Omnimind" },
   {
-    href: "/servicios/",
+    href: `${base}/servicios/`,
     label: "Soluciones",
     children: [
-      { href: "/servicios/empowermind/", label: "Empowermind" },
-      { href: "/servicios/wealth-mind/", label: "Wealth & Mind" },
-      { href: "/servicios/neurowise/", label: "Neurowise" },
+      { href: `${base}/servicios/empowermind/`, label: "Empowermind" },
+      { href: `${base}/servicios/wealth-mind/`, label: "Wealth & Mind" },
+      { href: `${base}/servicios/neurowise/`, label: "Neurowise" },
     ],
   },
-  { href: "/blog/", label: "Blog" },
+  { href: `${base}/blog/`, label: "Blog" },
 ];
 
 function isActive(href: string): boolean {
@@ -36,10 +38,10 @@ function isActive(href: string): boolean {
   <!-- Barra superior: Logo -->
   <div class="header-top">
     <div class="container">
-      <a href="/" class="logo" aria-label="Omnimind — Inicio">
+      <a href={`${base}/`} class="logo" aria-label="Omnimind — Inicio">
         <div class="logo__icon" aria-hidden="true">
           <img
-            src="/img/icononly_transparent_nobuffer.png"
+            src={`${base}/img/icononly_transparent_nobuffer.png`}
             alt=""
             width="56"
             height="56"
@@ -121,9 +123,11 @@ function isActive(href: string): boolean {
       </ul>
 
       <!-- CTA principal -->
-      <a href="/contacto/" class="btn btn-accent nav-cta">
-        Solicitar cotización
-      </a>
+      <div class="header-cta">
+        <a href={`${base}/contacto/`} class="btn btn-accent nav-cta">
+          Solicitar cotización
+        </a>
+      </div>
 
       <!-- Botón hamburguesa (mobile) -->
       <button
@@ -167,9 +171,11 @@ function isActive(href: string): boolean {
             ))
           }
         </ul>
-        <a href="/contacto/" class="btn btn-primary mobile-cta">
-          Solicitar cotización
-        </a>
+        <div class="mobile-nav__footer">
+          <a href={`${base}/contacto/`} class="btn btn-primary mobile-cta">
+            Solicitar cotización
+          </a>
+        </div>
       </div>
     </div>
   </nav>
