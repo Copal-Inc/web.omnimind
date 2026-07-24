@@ -1,19 +1,20 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-  title="Sobre Nosotras"
+  title="Sobre Nosotros"
   description="Conoce al equipo de Omnimind: quiénes somos, nuestra misión y por qué creemos que una mente sana es una mente próspera."
 >
-
   <!-- ════════════════════════════════════════════
        HERO INTERNO
   ════════════════════════════════════════════ -->
   <section class="page-hero section-dark" aria-label="Sobre Omnimind">
     <div class="container page-hero__inner">
       <span class="section-heading__eyebrow">Sobre nosotras</span>
-      <h1 class="page-hero__title">Una empresa dedicada<br />al crecimiento humano</h1>
+      <h1 class="page-hero__title">
+        Una empresa dedicada<br />al crecimiento humano
+      </h1>
       <p class="page-hero__lead">
         En Omnimind creemos que una mente sana es una mente próspera. Por eso
         diseñamos e implementamos intervenciones organizacionales con base
@@ -55,15 +56,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="container">
       <div class="section-heading">
         <span class="section-heading__eyebrow">Lo que nos define</span>
-        <h2 class="section-heading__title" id="valores-heading">Nuestros valores</h2>
+        <h2 class="section-heading__title" id="valores-heading">
+          Nuestros valores
+        </h2>
       </div>
       <ul class="valores-grid" role="list">
         <li class="valor-card">
           <span class="valor-card__icon" aria-hidden="true">🔬</span>
           <h3 class="valor-card__title">Basadas en evidencia</h3>
           <p class="valor-card__body">
-            Cada intervención que diseñamos tiene respaldo científico. No improvisamos
-            ni seguimos modas; aplicamos lo que la investigación demuestra que funciona.
+            Cada intervención que diseñamos tiene respaldo científico. No
+            improvisamos ni seguimos modas; aplicamos lo que la investigación
+            demuestra que funciona.
           </p>
         </li>
         <li class="valor-card">
@@ -71,15 +75,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <h3 class="valor-card__title">Toque humano</h3>
           <p class="valor-card__body">
             La ciencia nos guía, pero las personas nos mueven. Cada programa lo
-            adaptamos a la cultura, retos y contexto únicos de cada organización.
+            adaptamos a la cultura, retos y contexto únicos de cada
+            organización.
           </p>
         </li>
         <li class="valor-card">
           <span class="valor-card__icon" aria-hidden="true">♻️</span>
           <h3 class="valor-card__title">Impacto sostenible</h3>
           <p class="valor-card__body">
-            No buscamos resultados de un día. Diseñamos cambios que perduran y que
-            las propias organizaciones pueden mantener y escalar.
+            No buscamos resultados de un día. Diseñamos cambios que perduran y
+            que las propias organizaciones pueden mantener y escalar.
           </p>
         </li>
         <li class="valor-card">
@@ -101,7 +106,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="container">
       <div class="section-heading">
         <span class="section-heading__eyebrow">Las personas detrás</span>
-        <h2 class="section-heading__title" id="equipo-heading">Nuestro equipo</h2>
+        <h2 class="section-heading__title" id="equipo-heading">
+          Nuestro equipo
+        </h2>
         <p class="section-heading__body">
           Un equipo multidisciplinario de psicólogas, coaches y especialistas en
           neurociencias comprometidas con tu organización.
@@ -111,7 +118,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="grid-3 team-grid">
         <!-- Placeholder — pendiente fotos y bios aprobadas -->
         <article class="team-card">
-          <div class="img-placeholder team-card__photo" aria-label="Foto del equipo — pendiente">
+          <div
+            class="img-placeholder team-card__photo"
+            aria-label="Foto del equipo — pendiente"
+          >
             👤 Integrante del equipo
           </div>
           <div class="team-card__info">
@@ -123,7 +133,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
         </article>
         <article class="team-card">
-          <div class="img-placeholder team-card__photo" aria-label="Foto del equipo — pendiente">
+          <div
+            class="img-placeholder team-card__photo"
+            aria-label="Foto del equipo — pendiente"
+          >
             👤 Integrante del equipo
           </div>
           <div class="team-card__info">
@@ -135,7 +148,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
         </article>
         <article class="team-card">
-          <div class="img-placeholder team-card__photo" aria-label="Foto del equipo — pendiente">
+          <div
+            class="img-placeholder team-card__photo"
+            aria-label="Foto del equipo — pendiente"
+          >
             👤 Integrante del equipo
           </div>
           <div class="team-card__info">
@@ -156,11 +172,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="section section-dark" aria-labelledby="cta-about-heading">
     <div class="container cta-simple">
       <h2 id="cta-about-heading">¿Quieres conocer más sobre nosotras?</h2>
-      <p>Platícanos sobre tu organización y diseñamos una solución a la medida.</p>
+      <p>
+        Platícanos sobre tu organización y diseñamos una solución a la medida.
+      </p>
       <a href="/contacto/" class="btn btn-accent">Escríbenos</a>
     </div>
   </section>
-
 </BaseLayout>
 
 <style>
@@ -246,7 +263,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-radius: var(--radius-lg);
     padding: 2rem;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-slow), transform var(--transition-slow);
+    transition:
+      box-shadow var(--transition-slow),
+      transform var(--transition-slow);
   }
 
   .valor-card:hover {
@@ -279,7 +298,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-slow), transform var(--transition-slow);
+    transition:
+      box-shadow var(--transition-slow),
+      transform var(--transition-slow);
   }
 
   .team-card:hover {
