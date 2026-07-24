@@ -61,49 +61,79 @@ import AdminLayout from '../layouts/AdminLayout.astro';
     <!-- CONTENIDO PRINCIPAL -->
     <main class="cms-main" id="cms-content">
 
-      <!-- HEADER CMS -->
+      <!-- TOPBAR con pestañas -->
       <div class="cms-topbar">
-        <div class="cms-topbar__left">
-          <h1 class="cms-topbar__title">Blog</h1>
-          <span class="cms-topbar__count" id="article-count">0 artículos</span>
+        <div class="cms-tabs" role="tablist" aria-label="Secciones del blog">
+          <button
+            class="cms-tab cms-tab--active"
+            id="tab-articulos"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-articulos"
+            type="button"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Artículos
+            <span class="cms-tab__count" id="tab-count">0</span>
+          </button>
+          <button
+            class="cms-tab"
+            id="tab-nuevo"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-nuevo"
+            type="button"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 4v16m8-8H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span id="tab-nuevo-label">Nuevo artículo</span>
+          </button>
         </div>
-        <button
-          class="btn btn-primary cms-topbar__new"
-          id="btn-nuevo-articulo"
-          type="button"
-          aria-expanded="false"
-          aria-controls="cms-editor"
-        >
-          + Nuevo artículo
-        </button>
+
+        <!-- Acciones del editor (solo visibles en pestaña de edición) -->
+        <div class="cms-editor-actions" id="editor-actions" hidden>
+          <button class="btn btn-draft" id="btn-draft" type="button">💾 Guardar borrador</button>
+          <button class="btn btn-publish" id="btn-publish" type="button">✓ Publicar</button>
+        </div>
       </div>
 
-      <!-- LISTA DE ARTÍCULOS (estado vacío por ahora) -->
-      <div class="cms-list" id="cms-list">
+      <!-- ═══════════════════════════════════════════
+           PANEL 1: LISTA DE ARTÍCULOS
+      ═══════════════════════════════════════════ -->
+      <div
+        class="cms-panel"
+        id="panel-articulos"
+        role="tabpanel"
+        aria-labelledby="tab-articulos"
+      >
+        <!-- Estado vacío -->
         <div class="cms-empty" id="cms-empty">
           <div class="cms-empty__icon" aria-hidden="true">📝</div>
           <p class="cms-empty__text">No hay artículos todavía.</p>
-          <p class="cms-empty__sub">Haz clic en <strong>+ Nuevo artículo</strong> para empezar.</p>
+          <p class="cms-empty__sub">
+            Ve a la pestaña <strong>Nuevo artículo</strong> para empezar.
+          </p>
+          <button class="btn btn-primary" id="btn-empty-new" type="button">+ Crear primer artículo</button>
         </div>
 
-        <!-- Los artículos guardados aparecerán aquí -->
-        <ul class="cms-articles" id="cms-articles" role="list" aria-label="Lista de artículos" hidden></ul>
+        <!-- Grid de tarjetas de artículos -->
+        <div class="cms-cards-grid" id="cms-cards-grid" hidden aria-label="Artículos del blog" role="list"></div>
       </div>
 
-      <!-- EDITOR (oculto hasta que se haga clic en Nuevo artículo) -->
-      <div class="cms-editor" id="cms-editor" hidden aria-label="Editor de artículo">
-        <div class="cms-editor__header">
-          <button class="cms-editor__back btn btn-outline-dark" id="btn-back" type="button">
-            ← Volver
-          </button>
-          <h2 class="cms-editor__title" id="editor-mode-label">Nuevo artículo</h2>
-          <div class="cms-editor__actions">
-            <button class="btn btn-outline-dark" id="btn-draft" type="button">Guardar borrador</button>
-            <button class="btn btn-primary" id="btn-publish" type="button">Publicar</button>
-          </div>
-        </div>
-
-        <form class="cms-form" id="cms-form" novalidate aria-labelledby="editor-mode-label">
+      <!-- ═══════════════════════════════════════════
+           PANEL 2: EDITOR DE ARTÍCULO
+      ═══════════════════════════════════════════ -->
+      <div
+        class="cms-panel cms-panel--editor"
+        id="panel-nuevo"
+        role="tabpanel"
+        aria-labelledby="tab-nuevo"
+        hidden
+      >
+        <form class="cms-form" id="cms-form" novalidate>
 
           <!-- Título -->
           <div class="cms-field cms-field--full">
@@ -156,7 +186,7 @@ import AdminLayout from '../layouts/AdminLayout.astro';
                 <option>Recursos humanos</option>
                 <option>Empowermind</option>
                 <option>Neurowise</option>
-                <option>Wealth & Mind</option>
+                <option>Wealth &amp; Mind</option>
               </select>
             </div>
           </div>
@@ -204,34 +234,47 @@ import AdminLayout from '../layouts/AdminLayout.astro';
           <div class="cms-row cms-row--checks">
             <label class="cms-check-label" for="field-draft">
               <input id="field-draft" name="draft" type="checkbox" class="cms-check" />
-              <span>Guardar como borrador <span class="cms-check-hint">(no aparece en el sitio)</span></span>
+              <span>Borrador <span class="cms-check-hint">(no aparece en el sitio)</span></span>
             </label>
             <label class="cms-check-label" for="field-featured">
               <input id="field-featured" name="featured" type="checkbox" class="cms-check" />
-              <span>Artículo destacado <span class="cms-check-hint">(aparece primero en el blog)</span></span>
+              <span>Destacado <span class="cms-check-hint">(aparece primero en el blog)</span></span>
             </label>
           </div>
 
-          <!-- Editor de contenido -->
+          <!-- Editor Markdown + Preview -->
           <div class="cms-field cms-field--full">
-            <label class="cms-label" for="field-body">
-              Contenido del artículo <span aria-hidden="true">*</span>
-              <span class="cms-label__hint">Puedes usar Markdown: **negrita**, *cursiva*, ## encabezados</span>
-            </label>
-            <div class="cms-editor-toolbar" aria-label="Barra de herramientas del editor" role="toolbar">
+            <div class="cms-editor-label-row">
+              <label class="cms-label" for="field-body">
+                Contenido <span aria-hidden="true">*</span>
+                <span class="cms-label__hint">Markdown: **negrita**, *cursiva*, ## encabezado</span>
+              </label>
+              <div class="cms-view-toggle" role="group" aria-label="Modo de vista">
+                <button type="button" class="cms-view-btn cms-view-btn--active" id="btn-view-editor" aria-pressed="true">Editor</button>
+                <button type="button" class="cms-view-btn" id="btn-view-split" aria-pressed="false">Dividida</button>
+                <button type="button" class="cms-view-btn" id="btn-view-preview" aria-pressed="false">Vista previa</button>
+              </div>
+            </div>
+
+            <div class="cms-editor-toolbar" aria-label="Barra de herramientas" role="toolbar">
               <button type="button" class="cms-toolbar-btn" title="Negrita" data-action="bold"><strong>B</strong></button>
               <button type="button" class="cms-toolbar-btn" title="Cursiva" data-action="italic"><em>I</em></button>
-              <button type="button" class="cms-toolbar-btn" title="Encabezado H2" data-action="h2">H2</button>
-              <button type="button" class="cms-toolbar-btn" title="Encabezado H3" data-action="h3">H3</button>
+              <span class="cms-toolbar-sep" aria-hidden="true"></span>
+              <button type="button" class="cms-toolbar-btn" title="H2" data-action="h2">H2</button>
+              <button type="button" class="cms-toolbar-btn" title="H3" data-action="h3">H3</button>
+              <span class="cms-toolbar-sep" aria-hidden="true"></span>
               <button type="button" class="cms-toolbar-btn" title="Lista" data-action="list">≡</button>
               <button type="button" class="cms-toolbar-btn" title="Enlace" data-action="link">🔗</button>
+              <button type="button" class="cms-toolbar-btn" title="Cita" data-action="quote">"</button>
             </div>
-            <textarea
-              id="field-body"
-              name="body"
-              class="cms-input cms-input--body"
-              rows="16"
-              placeholder="Escribe el contenido del artículo aquí…
+
+            <div class="cms-body-panel" id="cms-body-panel">
+              <textarea
+                id="field-body"
+                name="body"
+                class="cms-input cms-input--body"
+                rows="18"
+                placeholder="Escribe el contenido aquí…
 
 ## Introducción
 
@@ -240,22 +283,40 @@ Tu contenido en Markdown aquí.
 ## Desarrollo
 
 Más contenido…"
-              required
-            ></textarea>
+                required
+                aria-label="Contenido del artículo en Markdown"
+              ></textarea>
+
+              <div
+                class="cms-preview"
+                id="cms-preview"
+                hidden
+                aria-label="Vista previa del contenido"
+                aria-live="polite"
+              >
+                <div class="cms-preview__inner prose" id="cms-preview-content">
+                  <p class="cms-preview__empty">La vista previa aparecerá aquí mientras escribes…</p>
+                </div>
+              </div>
+            </div>
           </div>
 
         </form>
-
-        <!-- NOTIFICACIÓN DE PUBLICACIÓN -->
-        <div class="cms-toast" id="cms-toast" hidden role="status" aria-live="polite"></div>
       </div>
+
+      <!-- TOAST -->
+      <div class="cms-toast" id="cms-toast" hidden role="status" aria-live="polite"></div>
 
     </main>
   </div>
 
 </AdminLayout>
 
-<style>
+<style is:global>
+  /* Regla de ocultamiento estricta */
+  [hidden] {
+    display: none !important;
+  }
   /* ── BANNER DEMO ── */
   .cms-demo-banner {
     background: #fffbeb;
@@ -406,11 +467,11 @@ Más contenido…"
     flex-direction: column;
   }
 
-  /* ── TOPBAR ── */
+  /* ── TOPBAR & PESTAÑAS ── */
   .cms-topbar {
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
-    padding: 1rem 2rem;
+    padding: 0 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -418,12 +479,220 @@ Más contenido…"
     position: sticky;
     top: 0;
     z-index: 10;
+    height: 56px;
   }
 
-  .cms-topbar__left { display: flex; align-items: baseline; gap: 0.75rem; }
-  .cms-topbar__title { font-size: var(--text-xl); font-family: var(--font-heading); margin: 0; color: var(--color-brand-primary); }
-  .cms-topbar__count { font-size: var(--text-sm); color: var(--color-text-muted); }
-  .cms-topbar__new { padding: 0.6rem 1.25rem; font-size: var(--text-sm); }
+  .cms-tabs {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    gap: 0.5rem;
+  }
+
+  .cms-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-base), border-color var(--transition-base);
+    height: 100%;
+  }
+
+  .cms-tab:hover {
+    color: var(--color-brand-primary);
+  }
+
+  .cms-tab--active {
+    color: var(--color-brand-primary);
+    border-bottom-color: var(--color-brand-primary);
+  }
+
+  .cms-tab__count {
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: var(--text-xs);
+    padding: 0.1em 0.5em;
+    border-radius: var(--radius-pill);
+  }
+
+  .cms-editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* ── PANELES ── */
+  .cms-panel {
+    flex: 1;
+    padding: 2rem;
+  }
+
+  .cms-panel--editor {
+    padding: 2rem;
+    max-width: 1000px;
+  }
+
+  /* ── CARDS GRID ── */
+  .cms-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.75rem;
+  }
+
+  .cms-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cms-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(42, 76, 144, 0.12);
+  }
+
+  .cms-card__img-wrap {
+    width: 100%;
+    height: 180px;
+    background: #eef2f6;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .cms-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .cms-card:hover .cms-card__img {
+    transform: scale(1.03);
+  }
+
+  .cms-card__img-ph {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: #eef2f6;
+  }
+
+  .cms-card__badges {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .cms-card__body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .cms-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .cms-card__category {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent-dark);
+  }
+
+  .cms-card__title {
+    font-size: var(--text-xl);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+    color: var(--color-brand-primary);
+  }
+
+  .cms-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .cms-card__footer {
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .cms-card__actions {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .btn-card-action {
+    padding: 0.35rem 0.75rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color var(--transition-base), color var(--transition-base);
+  }
+
+  .btn-card-edit {
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+  .btn-card-edit:hover {
+    background: var(--color-brand-primary);
+    color: #fff;
+    border-color: var(--color-brand-primary);
+  }
+
+  .btn-card-delete {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: #c53030;
+  }
+  .btn-card-delete:hover {
+    background: #e53e3e;
+    color: #fff;
+    border-color: #e53e3e;
+  }
 
   /* ── LISTA ── */
   .cms-list { flex: 1; padding: 2rem; }
@@ -552,6 +821,16 @@ Más contenido…"
     flex-direction: column;
     gap: 1.5rem;
     max-width: 900px;
+  }
+
+  .cms-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    margin-top: 1rem;
   }
 
   .cms-row {
@@ -746,6 +1025,168 @@ Más contenido…"
     .cms-sidebar { display: none; }
     .cms-row { grid-template-columns: 1fr; }
   }
+
+  /* ── BOTONES DIFERENCIADOS ── */
+  .btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    padding: 0.5rem 1rem;
+  }
+  .btn-ghost:hover {
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Guardar borrador: amarillo/ámbar discreto */
+  .btn-draft {
+    background: #fef3c7;
+    border: 1.5px solid #f59e0b;
+    color: #92400e;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-base), transform var(--transition-base);
+  }
+  .btn-draft:hover {
+    background: #fde68a;
+    transform: translateY(-1px);
+  }
+
+  /* Publicar: verde claro inconfundible */
+  .btn-publish {
+    background: #059669;
+    border: 1.5px solid #059669;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  }
+  .btn-publish:hover {
+    background: #047857;
+    border-color: #047857;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* ── TOGGLE DE VISTA ── */
+  .cms-editor-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .cms-view-toggle {
+    display: flex;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .cms-view-btn {
+    background: var(--color-surface);
+    border: none;
+    border-right: 1px solid var(--color-border);
+    padding: 0.35rem 0.85rem;
+    font-size: var(--text-xs);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background-color var(--transition-base), color var(--transition-base);
+  }
+  .cms-view-btn:last-child { border-right: none; }
+  .cms-view-btn:hover { background: var(--color-surface-muted); color: var(--color-text); }
+  .cms-view-btn--active {
+    background: var(--color-brand-primary);
+    color: #fff;
+  }
+  .cms-view-btn--active:hover {
+    background: var(--color-brand-secondary);
+    color: #fff;
+  }
+
+  /* ── PANEL DIVIDIDO EDITOR/PREVIEW ── */
+  .cms-body-panel {
+    display: grid;
+    grid-template-columns: 1fr;   /* default: solo editor */
+    gap: 0;
+  }
+
+  /* Vista dividida: mitad y mitad */
+  .cms-body-panel.is-split {
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .cms-body-panel.is-split .cms-input--body {
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid var(--color-border);
+    height: 440px;
+    min-height: 440px;
+  }
+
+  .cms-body-panel.is-split .cms-preview {
+    height: 440px;
+    overflow-y: auto;
+  }
+
+  /* Vista solo preview */
+  .cms-body-panel.is-preview-only {
+    grid-template-columns: 1fr;
+  }
+
+  /* PREVIEW PANEL */
+  .cms-preview {
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow-y: auto;
+    min-height: 360px;
+  }
+
+  .cms-body-panel.is-split .cms-preview {
+    border: none;
+    border-radius: 0;
+  }
+
+  .cms-preview__inner {
+    padding: 1.5rem 2rem;
+    max-width: none;
+    font-size: var(--text-base);
+  }
+
+  .cms-preview__empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: var(--text-sm);
+  }
+
+  /* Separador en toolbar */
+  .cms-toolbar-sep {
+    display: inline-block;
+    width: 1px;
+    height: 1.2rem;
+    background: var(--color-border);
+    margin: 0 0.25rem;
+    vertical-align: middle;
+  }
 </style>
 
 <script>
@@ -753,86 +1194,154 @@ Más contenido…"
   type Article = {
     id: string;
     title: string;
+    description: string;
     category: string;
+    author: string;
     date: string;
+    coverUrl?: string;
+    body: string;
     isDraft: boolean;
     isFeatured: boolean;
   };
 
-  const articles: Article[] = [];
+  // Artículos de demostración iniciales
+  const articles: Article[] = [
+    {
+      id: 'demo-1',
+      title: 'Neurociencia aplicada al liderazgo organizacional',
+      description: 'Descubre cómo la comprensión del cerebro humano puede transformar la toma de decisiones y el clima de trabajo en tu empresa.',
+      category: 'Neurociencias',
+      author: 'Equipo Omnimind',
+      date: '2026-07-20',
+      coverUrl: '',
+      body: '## El cerebro y el liderazgo\n\nLas neurociencias nos enseñan...',
+      isDraft: false,
+      isFeatured: true,
+    }
+  ];
+
+  let currentEditId: string | null = null;
 
   // ── Referencias DOM ──
-  const btnNew      = document.getElementById('btn-nuevo-articulo') as HTMLButtonElement;
-  const btnBack     = document.getElementById('btn-back') as HTMLButtonElement;
-  const btnDraft    = document.getElementById('btn-draft') as HTMLButtonElement;
-  const btnPublish  = document.getElementById('btn-publish') as HTMLButtonElement;
-  const editorEl    = document.getElementById('cms-editor') as HTMLElement;
-  const listEl      = document.getElementById('cms-list') as HTMLElement;
-  const emptyEl     = document.getElementById('cms-empty') as HTMLElement;
-  const articlesEl  = document.getElementById('cms-articles') as HTMLUListElement;
-  const countEl     = document.getElementById('article-count') as HTMLElement;
-  const toast       = document.getElementById('cms-toast') as HTMLElement;
-  const form        = document.getElementById('cms-form') as HTMLFormElement;
-  const uploadInput = document.getElementById('field-cover') as HTMLInputElement;
-  const uploadPrev  = document.getElementById('cms-upload-preview') as HTMLImageElement;
-  const uploadPh    = document.getElementById('cms-upload-placeholder') as HTMLElement;
-  const modeLabel   = document.getElementById('editor-mode-label') as HTMLElement;
+  const tabArticulos    = document.getElementById('tab-articulos')    as HTMLButtonElement;
+  const tabNuevo        = document.getElementById('tab-nuevo')        as HTMLButtonElement;
+  const tabNuevoLabel   = document.getElementById('tab-nuevo-label')  as HTMLElement;
+  const tabCount        = document.getElementById('tab-count')        as HTMLElement;
+  
+  const panelArticulos  = document.getElementById('panel-articulos')  as HTMLElement;
+  const panelNuevo      = document.getElementById('panel-nuevo')      as HTMLElement;
+  const editorActions   = document.getElementById('editor-actions')   as HTMLElement;
+  
+  const emptyEl         = document.getElementById('cms-empty')        as HTMLElement;
+  const cardsGrid       = document.getElementById('cms-cards-grid')   as HTMLElement;
+  const btnEmptyNew     = document.getElementById('btn-empty-new')    as HTMLButtonElement;
+  
+  const btnDraft        = document.getElementById('btn-draft')        as HTMLButtonElement;
+  const btnPublish      = document.getElementById('btn-publish')      as HTMLButtonElement;
+  const form            = document.getElementById('cms-form')         as HTMLFormElement;
+  const toast           = document.getElementById('cms-toast')        as HTMLElement;
 
-  // ── Mostrar editor ──
-  function showEditor(mode: 'new' | 'edit' = 'new') {
-    modeLabel.textContent = mode === 'new' ? 'Nuevo artículo' : 'Editar artículo';
-    listEl.hidden  = true;
-    editorEl.hidden = false;
-    btnNew.setAttribute('aria-expanded', 'true');
-    (document.getElementById('field-title') as HTMLInputElement).focus();
+  const uploadInput     = document.getElementById('field-cover')            as HTMLInputElement;
+  const uploadPrev      = document.getElementById('cms-upload-preview')     as HTMLImageElement;
+  const uploadPh        = document.getElementById('cms-upload-placeholder') as HTMLElement;
+
+  // ── Cambio de Pestañas ──
+  function switchTab(tab: 'articulos' | 'nuevo') {
+    if (tab === 'articulos') {
+      tabArticulos.classList.add('cms-tab--active');
+      tabArticulos.setAttribute('aria-selected', 'true');
+      tabNuevo.classList.remove('cms-tab--active');
+      tabNuevo.setAttribute('aria-selected', 'false');
+
+      panelArticulos.hidden = false;
+      panelNuevo.hidden = true;
+      editorActions.hidden = true;
+
+      // Si volvemos a la pestaña de artículos, reseteamos el modo edición
+      if (currentEditId) {
+        currentEditId = null;
+        tabNuevoLabel.textContent = 'Nuevo artículo';
+        form.reset();
+        resetUploadPreview();
+      }
+    } else {
+      tabNuevo.classList.add('cms-tab--active');
+      tabNuevo.setAttribute('aria-selected', 'true');
+      tabArticulos.classList.remove('cms-tab--active');
+      tabArticulos.setAttribute('aria-selected', 'false');
+
+      panelNuevo.hidden = false;
+      panelArticulos.hidden = true;
+      editorActions.hidden = false;
+    }
   }
 
-  // ── Volver a la lista ──
-  function showList() {
-    editorEl.hidden = true;
-    listEl.hidden  = false;
-    form.reset();
-    uploadPrev.hidden = true;
-    uploadPh.hidden   = false;
-    btnNew.setAttribute('aria-expanded', 'false');
-  }
+  tabArticulos.addEventListener('click', () => switchTab('articulos'));
+  tabNuevo.addEventListener('click', () => switchTab('nuevo'));
+  if (btnEmptyNew) btnEmptyNew.addEventListener('click', () => switchTab('nuevo'));
 
-  // ── Actualizar lista ──
+  // ── Renderizar Grid de Cards ──
   function renderArticles() {
     const count = articles.length;
-    countEl.textContent = `${count} artículo${count !== 1 ? 's' : ''}`;
-    emptyEl.hidden    = count > 0;
-    articlesEl.hidden = count === 0;
+    tabCount.textContent = count.toString();
 
-    articlesEl.innerHTML = articles.map(a => `
-      <li class="cms-article-item">
-        <div>
-          <p class="cms-article-item__title">${a.title || '(Sin título)'}</p>
-          <div class="cms-article-item__meta">
-            ${a.date ? `<span>${new Date(a.date + 'T12:00:00').toLocaleDateString('es-MX', {year:'numeric',month:'long',day:'numeric'})}</span>` : ''}
-            ${a.category ? `<span>${a.category}</span>` : ''}
-            ${a.isFeatured ? '<span>★ Destacado</span>' : ''}
+    if (count === 0) {
+      emptyEl.hidden = false;
+      cardsGrid.hidden = true;
+      cardsGrid.innerHTML = '';
+      return;
+    }
+
+    emptyEl.hidden = true;
+    cardsGrid.hidden = false;
+
+    cardsGrid.innerHTML = articles.map(a => `
+      <article class="cms-card" data-id="${a.id}">
+        <div class="cms-card__img-wrap">
+          ${a.coverUrl 
+            ? `<img src="${a.coverUrl}" alt="${a.title}" class="cms-card__img" />` 
+            : `<div class="cms-card__img-ph">📰</div>`
+          }
+          <div class="cms-card__badges">
+            ${a.isDraft 
+              ? `<span class="cms-article-item__status cms-article-item__status--draft">Borrador</span>`
+              : `<span class="cms-article-item__status cms-article-item__status--published">Publicado</span>`
+            }
+            ${a.isFeatured ? `<span class="cms-article-item__status" style="background:#fef3c7;color:#92400e;">★ Destacado</span>` : ''}
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:0.75rem">
-          <span class="cms-article-item__status ${a.isDraft ? 'cms-article-item__status--draft' : 'cms-article-item__status--published'}">
-            ${a.isDraft ? 'Borrador' : 'Publicado'}
-          </span>
-          <div class="cms-article-item__actions">
-            <button class="cms-article-item__btn" onclick="editArticle('${a.id}')">Editar</button>
-            <button class="cms-article-item__btn" onclick="deleteArticle('${a.id}')">Eliminar</button>
+
+        <div class="cms-card__body">
+          <div class="cms-card__meta">
+            ${a.category ? `<span class="cms-card__category">${a.category}</span> • ` : ''}
+            <span>${a.date ? new Date(a.date + 'T12:00:00').toLocaleDateString('es-MX', {day:'numeric',month:'short',year:'numeric'}) : 'Sin fecha'}</span>
+          </div>
+
+          <h3 class="cms-card__title">${a.title || '(Sin título)'}</h3>
+          <p class="cms-card__desc">${a.description || 'Sin descripción disponible.'}</p>
+
+          <div class="cms-card__footer">
+            <span style="font-size:var(--text-xs);color:var(--color-text-muted);">Por: ${a.author || 'Omnimind'}</span>
+            <div class="cms-card__actions">
+              <button class="btn-card-action btn-card-edit" onclick="editArticle('${a.id}')">Editar</button>
+              <button class="btn-card-action btn-card-delete" onclick="deleteArticle('${a.id}')">Eliminar</button>
+            </div>
           </div>
         </div>
-      </li>
+      </article>
     `).join('');
   }
 
-  // ── Guardar artículo ──
+  // ── Guardar / Crear Artículo ──
   function saveArticle(isDraft: boolean) {
-    const title    = (document.getElementById('field-title')    as HTMLInputElement).value.trim();
-    const category = (document.getElementById('field-category') as HTMLSelectElement).value;
-    const date     = (document.getElementById('field-date')     as HTMLInputElement).value;
-    const featured = (document.getElementById('field-featured') as HTMLInputElement).checked;
+    const title       = (document.getElementById('field-title')    as HTMLInputElement).value.trim();
+    const description = (document.getElementById('field-desc')     as HTMLTextAreaElement).value.trim();
+    const date        = (document.getElementById('field-date')     as HTMLInputElement).value;
+    const author      = (document.getElementById('field-author')   as HTMLInputElement).value.trim();
+    const category    = (document.getElementById('field-category') as HTMLSelectElement).value;
+    const featured    = (document.getElementById('field-featured') as HTMLInputElement).checked;
+    const body        = (document.getElementById('field-body')     as HTMLTextAreaElement).value;
+    const coverUrl    = uploadPrev.hidden ? '' : uploadPrev.src;
 
     if (!title) {
       (document.getElementById('field-title') as HTMLInputElement).focus();
@@ -840,18 +1349,91 @@ Más contenido…"
       return;
     }
 
-    articles.unshift({
-      id: Date.now().toString(),
-      title,
-      category,
-      date,
-      isDraft,
-      isFeatured: featured,
-    });
+    if (currentEditId) {
+      // Editar existente
+      const idx = articles.findIndex(a => a.id === currentEditId);
+      if (idx !== -1) {
+        articles[idx] = {
+          ...articles[idx],
+          title,
+          description,
+          date,
+          author: author || 'Equipo Omnimind',
+          category,
+          isDraft,
+          isFeatured: featured,
+          body,
+          coverUrl: coverUrl || articles[idx].coverUrl
+        };
+      }
+      showToast(isDraft ? '📝 Borrador actualizado' : '✅ Artículo actualizado');
+    } else {
+      // Crear nuevo
+      articles.unshift({
+        id: Date.now().toString(),
+        title,
+        description,
+        date: date || new Date().toISOString().split('T')[0],
+        author: author || 'Equipo Omnimind',
+        category,
+        isDraft,
+        isFeatured: featured,
+        body,
+        coverUrl
+      });
+      showToast(isDraft ? '📝 Borrador guardado' : '✅ Artículo publicado');
+    }
 
     renderArticles();
-    showList();
-    showToast(isDraft ? '📝 Borrador guardado' : '✅ Artículo publicado');
+    form.reset();
+    resetUploadPreview();
+    currentEditId = null;
+    tabNuevoLabel.textContent = 'Nuevo artículo';
+    switchTab('articulos');
+  }
+
+  // ── Editar Artículo ──
+  (window as any).editArticle = (id: string) => {
+    const article = articles.find(a => a.id === id);
+    if (!article) return;
+
+    currentEditId = id;
+    tabNuevoLabel.textContent = 'Editando: ' + (article.title.substring(0, 20) + '...');
+
+    (document.getElementById('field-title') as HTMLInputElement).value = article.title;
+    (document.getElementById('field-desc') as HTMLTextAreaElement).value = article.description;
+    (document.getElementById('field-date') as HTMLInputElement).value = article.date;
+    (document.getElementById('field-author') as HTMLInputElement).value = article.author;
+    (document.getElementById('field-category') as HTMLSelectElement).value = article.category;
+    (document.getElementById('field-draft') as HTMLInputElement).checked = article.isDraft;
+    (document.getElementById('field-featured') as HTMLInputElement).checked = article.isFeatured;
+    (document.getElementById('field-body') as HTMLTextAreaElement).value = article.body;
+
+    if (article.coverUrl) {
+      uploadPrev.src = article.coverUrl;
+      uploadPrev.hidden = false;
+      uploadPh.hidden = true;
+    } else {
+      resetUploadPreview();
+    }
+
+    switchTab('nuevo');
+  };
+
+  // ── Eliminar Artículo ──
+  (window as any).deleteArticle = (id: string) => {
+    const idx = articles.findIndex(a => a.id === id);
+    if (idx !== -1) {
+      articles.splice(idx, 1);
+      renderArticles();
+      showToast('🗑️ Artículo eliminado');
+    }
+  };
+
+  function resetUploadPreview() {
+    uploadPrev.src = '';
+    uploadPrev.hidden = true;
+    uploadPh.hidden = false;
   }
 
   // ── Toast ──
@@ -886,6 +1468,7 @@ Más contenido…"
       if (action === 'h3')     replacement = `\n### ${sel || 'Encabezado'}\n`;
       if (action === 'list')   replacement = `\n- ${sel || 'elemento'}\n`;
       if (action === 'link')   replacement = `[${sel || 'texto'}](https://)`;
+      if (action === 'quote')  replacement = `\n> ${sel || 'cita'}\n`;
 
       const start = area.selectionStart;
       area.value = area.value.substring(0, start) + replacement + area.value.substring(area.selectionEnd);
@@ -893,26 +1476,107 @@ Más contenido…"
     });
   });
 
-  // ── Funciones globales para botones inline ──
-  (window as any).editArticle = (id: string) => {
-    showEditor('edit');
-  };
+  if (btnDraft) btnDraft.addEventListener('click', () => saveArticle(true));
+  if (btnPublish) btnPublish.addEventListener('click', () => saveArticle(false));
 
-  (window as any).deleteArticle = (id: string) => {
-    const idx = articles.findIndex(a => a.id === id);
-    if (idx !== -1) {
-      articles.splice(idx, 1);
-      renderArticles();
-      showToast('🗑️ Artículo eliminado');
+  // ═══════════════════════════════════════════════════
+  // TOGGLE EDITOR / VISTA DIVIDIDA / PREVIEW
+  // ═══════════════════════════════════════════════════
+
+  const bodyPanel    = document.getElementById('cms-body-panel')    as HTMLElement;
+  const bodyTextarea = document.getElementById('field-body')        as HTMLTextAreaElement;
+  const previewEl    = document.getElementById('cms-preview')       as HTMLElement;
+  const previewContent = document.getElementById('cms-preview-content') as HTMLElement;
+
+  const btnViewEditor  = document.getElementById('btn-view-editor')  as HTMLButtonElement;
+  const btnViewSplit   = document.getElementById('btn-view-split')   as HTMLButtonElement;
+  const btnViewPreview = document.getElementById('btn-view-preview') as HTMLButtonElement;
+  const viewBtns = [btnViewEditor, btnViewSplit, btnViewPreview];
+
+  type ViewMode = 'editor' | 'split' | 'preview';
+
+  function setView(mode: ViewMode) {
+    bodyPanel.classList.remove('is-split', 'is-preview-only');
+    viewBtns.forEach(b => {
+      b.classList.remove('cms-view-btn--active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+
+    if (mode === 'editor') {
+      bodyTextarea.hidden = false;
+      previewEl.hidden    = true;
+      btnViewEditor.classList.add('cms-view-btn--active');
+      btnViewEditor.setAttribute('aria-pressed', 'true');
+    } else if (mode === 'split') {
+      bodyPanel.classList.add('is-split');
+      bodyTextarea.hidden = false;
+      previewEl.hidden    = false;
+      btnViewSplit.classList.add('cms-view-btn--active');
+      btnViewSplit.setAttribute('aria-pressed', 'true');
+      updatePreview();
+    } else {
+      bodyPanel.classList.add('is-preview-only');
+      bodyTextarea.hidden = true;
+      previewEl.hidden    = false;
+      btnViewPreview.classList.add('cms-view-btn--active');
+      btnViewPreview.setAttribute('aria-pressed', 'true');
+      updatePreview();
     }
-  };
+  }
 
-  // ── Eventos ──
-  btnNew    .addEventListener('click', () => showEditor('new'));
-  btnBack   .addEventListener('click', showList);
-  btnDraft  .addEventListener('click', () => saveArticle(true));
-  btnPublish.addEventListener('click', () => saveArticle(false));
+  btnViewEditor .addEventListener('click', () => setView('editor'));
+  btnViewSplit  .addEventListener('click', () => setView('split'));
+  btnViewPreview.addEventListener('click', () => setView('preview'));
 
-  // Inicializar
+  // ── Renderer Markdown básico ──
+  function renderMarkdown(md: string): string {
+    if (!md.trim()) return '<p class="cms-preview__empty">La vista previa aparecerá aquí mientras escribes…</p>';
+
+    let html = md
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+      .replace(/^---$/gm, '<hr />')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+    const lines = html.split('\n');
+    let result = '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) { result += '\n'; continue; }
+      const isBlock = /^<(h[1-6]|ul|li|hr|blockquote|p)/.test(trimmed);
+      if (isBlock) {
+        result += trimmed + '\n';
+      } else {
+        result += `<p>${trimmed}</p>\n`;
+      }
+    }
+
+    return result;
+  }
+
+  function updatePreview() {
+    const md = bodyTextarea.value;
+    previewContent.innerHTML = renderMarkdown(md);
+  }
+
+  bodyTextarea.addEventListener('input', () => {
+    if (!previewEl.hidden) updatePreview();
+  });
+
+  // Inicialización de la pantalla
   renderArticles();
+  switchTab('articulos');
 </script>
+
