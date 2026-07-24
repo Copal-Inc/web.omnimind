@@ -1,63 +1,81 @@
-# Astro Starter Kit: Blog
+# 🧠 OMNIMIND — Sitio Web Corporativo
 
-```sh
-pnpm create astro@latest -- --template blog
+Sitio web corporativo de **Omnimind**, empresa de talleres e intervenciones organizacionales enfocada en neurociencias, bienestar y productividad para equipos de alto rendimiento.
+
+Construido con [Astro](https://astro.build/) — generador de sitios estáticos ultrarrápido.
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+src/
+├── components/        # Componentes reutilizables (Header, Footer, BaseHead)
+├── content/blog/      # Artículos del blog en Markdown
+├── layouts/           # Layouts: BaseLayout, BlogPost, AdminLayout
+├── pages/
+│   ├── index.astro             # Página principal
+│   ├── sobre-nosotras.astro    # Quiénes somos
+│   ├── contacto.astro          # Formulario de contacto
+│   ├── aviso-de-privacidad.astro
+│   ├── cms-demo.astro          # Demo del CMS para administradoras
+│   ├── blog/                   # Listado y detalle de artículos
+│   └── servicios/              # Empowermind, Neurowise, Wealth & Mind
+├── styles/global.css  # Sistema de diseño global (tokens, tipografía, colores)
+└── content.config.ts  # Schema de validación del blog
+public/
+├── admin/             # Decap CMS (config.yml + SPA)
+└── img/               # Logos e imágenes de marca
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-Features:
+## 🔄 Iteraciones de desarrollo
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+| # | Iteración | Estado |
+|---|-----------|--------|
+| 1 | Sistema visual global + Header + Footer | ✅ Completo |
+| 2 | Hero + Servicios + CTA de cotización | ✅ Completo |
+| 3 | Sobre Omnimind + Client Journey | ✅ Completo |
+| 4 | Casos de éxito + Testimonios | ⏳ Pendiente (esperando contenido real) |
+| 5 | Rutas secundarias (servicios, contacto, blog, aviso de privacidad) | ✅ Completo |
+| 6 | Decap CMS — interfaz de administración del blog | ✅ Completo |
+| 7 | Responsive + Accesibilidad + Build de producción | 🔜 Próxima |
+| 8 | Deploy de preview (Netlify / Vercel) + Backend CMS real | 🔜 Próxima |
 
-## 🚀 Project Structure
+---
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠️ Comandos
 
-```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+```bash
+# Instalar dependencias
+pnpm install
+
+# Servidor de desarrollo
+pnpm dev
+
+# Build de producción
+pnpm build
+
+# Preview del build
+pnpm preview
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 🧩 Stack tecnológico
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+- **Framework:** [Astro](https://astro.build/) v5
+- **Estilos:** CSS puro con sistema de tokens (variables CSS)
+- **Tipografía:** Poppins (headings) + Work Sans (body) — Google Fonts
+- **Blog:** Markdown / MDX con content collections
+- **CMS:** [Decap CMS](https://decapcms.org/) (configurado, pendiente de activar con git-gateway)
+- **Fuentes:** Atkinson Hyperlegible (font fallback nativo de Astro)
 
-Any static assets, like images, can be placed in the `public/` directory.
+---
 
-## 🧞 Commands
+## 📝 Notas
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+- El CMS demo (`/cms-demo/`) simula el flujo completo de creación de artículos sin backend. Cuando el sitio esté desplegado, se usará `/admin/` con Decap CMS conectado a GitHub.
+- Los artículos del blog se almacenan como archivos `.md` en `src/content/blog/` y se validan con el schema definido en `content.config.ts`.
+- El formulario de contacto está maquetado pero no tiene backend conectado aún.
