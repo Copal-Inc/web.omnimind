@@ -1,0 +1,67 @@
+
+digraph omnimind {
+  rankdir=TB;
+  graph [fontname="Calibri", fontsize=12, splines=true, nodesep=0.35, ranksep=0.6, bgcolor="white", pad=0.3];
+  node  [fontname="Calibri", fontsize=10, shape=box, style="rounded,filled", color="#3A7A52", fillcolor="white", penwidth=1.2, margin="0.14,0.09"];
+  edge  [fontname="Calibri", fontsize=8, color="#5B6470", penwidth=1.0];
+
+  subgraph cluster_users {
+    label="Personas"; labeljust="l"; style="rounded,filled"; fillcolor="#F2F3F4"; color="#9BA0A8"; fontcolor="#0F141B"; fontsize=11;
+    visit [label="Visitante\n(navegador)"];
+    admin [label="Administradora\nOmnimind"];
+    lead  [label="Prospecto\n(formulario)"];
+  }
+
+  subgraph cluster_cf {
+    label="Cloudflare — 1 cuenta (plan Free)"; labeljust="l"; style="rounded,filled"; fillcolor="#E4F3E8"; color="#3A7A52"; fontcolor="#0F141B"; fontsize=11;
+    dns       [label="DNS\n(nameservers)"];
+    cdn       [label="CDN + WAF + SSL"];
+    pages     [label="Pages\nSitio Astro estático"];
+    fnForm    [label="Pages Function\nPOST /api/contacto"];
+    fnAuth    [label="Worker OAuth\n/oauth · /callback"];
+    turnstile [label="Turnstile\n(anti-spam)"];
+    email     [label="Email Routing\ncontacto@dominio"];
+  }
+
+  subgraph cluster_gh {
+    label="GitHub — Copal-Inc/web.omnimind"; labeljust="l"; style="rounded,filled"; fillcolor="#E8E2D5"; color="#7A4A2E"; fontcolor="#0F141B"; fontsize=11;
+    repo     [label="Repositorio\ncódigo + Markdown"];
+    oauthApp [label="GitHub OAuth App"];
+  }
+
+  subgraph cluster_cms {
+    label="CMS (/admin)"; labeljust="l"; style="rounded,filled"; fillcolor="#EAF2FF"; color="#3A7A52"; fontcolor="#0F141B"; fontsize=11;
+    decap [label="Decap / Sveltia\n(SPA en navegador)"];
+  }
+
+  subgraph cluster_ext {
+    label="Servicios externos (Free)"; labeljust="l"; style="rounded,filled"; fillcolor="#F3E8E4"; color="#7A4A2E"; fontcolor="#0F141B"; fontsize=11;
+    resend [label="Resend / Brevo\n(envío de correo)"];
+    gmail  [label="Bandeja Omnimind\n(Gmail / Zoho)"];
+  }
+
+  // Navegación pública
+  visit -> cdn [label="HTTPS"];
+  cdn -> pages;
+  dns -> cdn [label="resuelve", style=dashed];
+
+  // Formulario
+  lead -> turnstile [label="envía"];
+  turnstile -> fnForm [label="token válido"];
+  fnForm -> resend [label="API"];
+  resend -> gmail [label="correo consulta"];
+
+  // Edición del blog
+  admin -> decap [label="/admin"];
+  decap -> fnAuth [label="login OAuth", dir=both];
+  fnAuth -> oauthApp [label="token", dir=both];
+  decap -> repo [label="commit MD + imágenes"];
+
+  // CI/CD
+  repo -> pages [label="push a main"];
+  pages -> cdn [label="deploy a edge"];
+
+  // Correo entrante
+  visit -> email [label="correo entrante", style=dashed];
+  email -> gmail [label="reenvía"];
+}

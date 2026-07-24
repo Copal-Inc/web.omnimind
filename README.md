@@ -41,7 +41,11 @@ public/
 | 5 | Rutas secundarias (servicios, contacto, blog, aviso de privacidad) | ✅ Completo |
 | 6 | Decap CMS — interfaz de administración del blog | ✅ Completo |
 | 7 | Responsive + Accesibilidad + Build de producción | 🔜 Próxima |
-| 8 | Deploy de preview (Netlify / Vercel) + Backend CMS real | 🔜 Próxima |
+| 8 | Deploy en **Cloudflare Pages** + CMS con OAuth real + formulario y correo | 🔜 Próxima |
+
+> **Arquitectura y hosting definidos:** el sitio se desplegará en **Cloudflare Pages**
+> (estático + serverless), con Decap/Sveltia CMS por OAuth de GitHub, formulario vía
+> Pages Function y correo por Cloudflare Email Routing. Ver [`docs/`](./docs/).
 
 ---
 
@@ -65,12 +69,29 @@ pnpm preview
 
 ## 🧩 Stack tecnológico
 
-- **Framework:** [Astro](https://astro.build/) v5
+- **Framework:** [Astro](https://astro.build/) v7 (sitio estático / JAMstack)
 - **Estilos:** CSS puro con sistema de tokens (variables CSS)
-- **Tipografía:** Poppins (headings) + Work Sans (body) — Google Fonts
 - **Blog:** Markdown / MDX con content collections
-- **CMS:** [Decap CMS](https://decapcms.org/) (configurado, pendiente de activar con git-gateway)
-- **Fuentes:** Atkinson Hyperlegible (font fallback nativo de Astro)
+- **CMS:** [Decap CMS](https://decapcms.org/) / [Sveltia](https://github.com/sveltia/sveltia-cms) — Git-based, autenticación por OAuth de GitHub
+- **Hosting:** [Cloudflare Pages](https://pages.cloudflare.com/) + Workers/Functions (serverless) + Email Routing
+- **Fuentes:** Atkinson Hyperlegible (proveedor de fuentes local de Astro)
+
+---
+
+## 📚 Documentación
+
+La documentación técnica y de negocio vive en [`docs/`](./docs/):
+
+| Documento | Contenido |
+|---|---|
+| [`docs/arquitectura.md`](./docs/arquitectura.md) | Diagrama de arquitectura detallado y flujos |
+| [`docs/documentacion-tecnica.md`](./docs/documentacion-tecnica.md) | Componentes, APIs, despliegue, seguridad |
+| [`docs/cotizacion.md`](./docs/cotizacion.md) | Costos recurrentes desglosados vs. presupuesto |
+| [`docs/runbook-migracion-wordpress-cloudflare.md`](./docs/runbook-migracion-wordpress-cloudflare.md) | Migrar el dominio de WordPress a Cloudflare |
+| [`docs/base-conocimiento-publicar-en-el-blog.md`](./docs/base-conocimiento-publicar-en-el-blog.md) | Guía para publicar en el blog |
+
+Los entregables al cliente (Documentación Técnica y Cotización) se generan también
+como `.docx` con la marca Copal: `python3 docs/generar_docx.py` → `docs/salida/`.
 
 ---
 
